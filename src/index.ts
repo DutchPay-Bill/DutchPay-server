@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-
+// integration with .env
 dotenv.config();
 
 const app = express()
