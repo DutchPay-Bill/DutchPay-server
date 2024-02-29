@@ -1,0 +1,71 @@
+generator client {
+    provider = "@prisma/client";
+}
+
+datasource db {
+    provider = "postgresql";
+    url = env("DB_URL");
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  fullname      String
+  phone_number  String
+  email         String         @unique
+  password      String
+  bio           String
+  dob           DateTime
+  photo_profile String
+  friends       Friend[]
+  orders          Order[]           
+  bills           Bill[]            
+  paymentMethods  PaymentMethod[]   
+}
+
+model Order {
+  id               Int     @id @default(autoincrement())
+  billId           Int
+  host_name        String
+  participant_name String
+  menu_name        String
+  qty              Int
+  price            BigInt
+  status           String
+  host             User @relation(fields:[host_name], reference:[username])
+  participant      Friend @relation(fields:[participant_name], references:[id])
+  bill             Bill @relation(fields:[billId], reference:[id])
+}
+
+model Bill {
+  id                Int             @id @default(autoincrement())
+  description       String
+  user_username     String
+  discount          Int
+  tax               Int
+  service           Float
+  total_price       BigInt
+  date              DateTime
+  payment_methods   Int
+  status            BigInt
+  user              User @relation(fields:[user_username], reference[username])
+  payment           PaymentMethod @relation(fields:[payment_methods],[id]) 
+  orders            Order[]
+}
+
+model Friend {
+  id            Int    @id @default(autoincrement())
+  userId        Int
+  friends_name  String
+  user          User   @relation(fields: [userId], references: [id])
+}
+
+model PaymentMethod {
+  id                    Int    @id @default(autoincrement())
+  userId                Int
+  payment_method_name   String
+  payment_method_detail BigInt
+  logo_payment_method   String
+  user                  User @relation(fields[userId],[id])
+  bills                 Bill[]
+}
