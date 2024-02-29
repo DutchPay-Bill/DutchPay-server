@@ -7,65 +7,86 @@ datasource db {
     url = env("DB_URL");
 }
 
-model User {
-  id            Int            @id @default(autoincrement())
-  username      String         @unique
-  fullname      String
-  phone_number  String
-  email         String         @unique
-  password      String
-  bio           String
-  dob           DateTime
-  photo_profile String
-  friends       Friend[]
-  orders          Order[]           
-  bills           Bill[]            
-  paymentMethods  PaymentMethod[]   
+model friends_order {
+  id                 Int       @id @default(autoincrement())
+  orders_id          Int
+  friends_id         Int
+  friend_order_price BigInt
+  created_at         DateTime
+  update_at          DateTime
+  friends            friends   @relation(fields: [friends_id], references: [id])
+  orders             orders    @relation(fields: [orders_id], references: [id])
 }
 
-model Order {
-  id               Int     @id @default(autoincrement())
-  billId           Int
-  host_name        String
-  participant_name String
-  menu_name        String
-  qty              Int
-  price            BigInt
-  status           String
-  host             User @relation(fields:[host_name], reference:[username])
-  participant      Friend @relation(fields:[participant_name], references:[id])
-  bill             Bill @relation(fields:[billId], reference:[id])
+model friends {
+  id             Int             @id @default(autoincrement())
+  user_id        Int
+  friends_name   String
+  friends_photo  String?
+  users          users           @relation(fields: [user_id], references: [id])
+  friends_order  friends_order[]
 }
 
-model Bill {
-  id                Int             @id @default(autoincrement())
-  description       String
-  user_username     String
-  discount          Int
-  tax               Int
-  service           Float
-  total_price       BigInt
-  date              DateTime
-  payment_methods   Int
-  status            BigInt
-  user              User @relation(fields:[user_username], reference[username])
-  payment           PaymentMethod @relation(fields:[payment_methods],[id]) 
-  orders            Order[]
+model users {
+  id                   Int                   @id @default(autoincrement())
+  username             String                @unique
+  fullname             String
+  phone_number         String
+  email                String?
+  password             String?
+  bio                  String?
+  dob                  DateTime?
+  photo_profile        String?
+  created_at           DateTime
+  update_at            DateTime
+  friends              friends[]
+  orders               orders[]
+  bill                 bill[]
+  payment_method_detail payment_method_detail[]
 }
 
-model Friend {
-  id            Int    @id @default(autoincrement())
-  userId        Int
-  friends_name  String
-  user          User   @relation(fields: [userId], references: [id])
+model orders {
+  id          Int       @id @default(autoincrement())
+  bill_id     Int
+  user_id     Int
+  menu_name   String
+  qty         Int
+  price       BigInt
+  status      String
+  bill        bill                  @relation(fields: [bill_id], references: [id])
+  users       users                 @relation(fields: [user_id], references: [id])
+  friends_order friends_order[]
 }
 
-model PaymentMethod {
-  id                    Int    @id @default(autoincrement())
-  userId                Int
-  payment_method_name   String
-  payment_method_detail BigInt
-  logo_payment_method   String
-  user                  User @relation(fields[userId],[id])
-  bills                 Bill[]
+model payment_method {
+  id                      Int                      @id @default(autoincrement())
+  payment_method_name     String
+  payment_method_logo     String
+  payment_method_detail   payment_method_detail[]
+}
+
+model bill {
+  id                     Int                     @id @default(autoincrement())
+  description            String
+  user_id                Int
+  discount               Float?
+  tax                    Int
+  service                Float?
+  total_price            BigInt
+  date                   DateTime
+  payment_method_detail  Int
+  status                 String
+  orders                 orders[]
+  users                  users                   @relation(fields: [user_id], references: [id])
+  payment_method_details payment_method_detail   @relation(fields: [payment_method_detail], references: [id])
+}
+
+model payment_method_detail {
+  id                  Int               @id @default(autoincrement())
+  user_id             Int
+  payment_method_id   Int
+  card_number         BigInt
+  card_name           String
+  users               users             @relation(fields: [user_id], references: [id])
+  payment_method      payment_method    @relation(fields: [payment_method_id], references: [id])
 }
