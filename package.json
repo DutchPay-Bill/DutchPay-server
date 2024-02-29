@@ -8,7 +8,7 @@
   },
   "scripts": {
     "postinstall": "prisma generate",
-    "build": "npx prisma generate && npm",
+    "build": "npx prisma generate && npm start",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
     "start": "tsc node dist/index.js"
   },
