@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "engines": {
-    "node": "16.x"
-    },
   "scripts": {
     "postinstall": "prisma generate",
     "build": "prisma generate && tsc",
