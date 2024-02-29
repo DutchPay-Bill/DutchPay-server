@@ -8,9 +8,9 @@
   },
   "scripts": {
     "postinstall": "prisma generate",
-    "build": "npx prisma generate && npx tsc",
+    "build": "npx prisma generate && npm",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "start": "node dist/index.js"
+    "start": "tsc node dist/index.js"
   },
   "keywords": [],
   "author": "revou next team 1",
