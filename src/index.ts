@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import { db } from './config/db/dbConnection';
 // integration with .env
 dotenv.config();
 
 const app = express()
+db();
 // body parser
 app.use(express.json());
 // set cors accept all
