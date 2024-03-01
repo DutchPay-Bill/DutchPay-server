@@ -37,7 +37,7 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
     const { email, password } = req.body;
     const result = await registerUser({ email, password })
     if (result.success) {
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         message: result.message,
       })

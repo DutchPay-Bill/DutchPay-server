@@ -1,9 +1,6 @@
-import { PrismaClient } from '../../prisma/generated/client';
 import bcryptjs from "bcryptjs";
 import ErrorHandler from '../utils/errorHandler';
-import { disconnectDB } from '../config/db/dbConnection';
-
-const prisma = new PrismaClient();
+import { disconnectDB, prisma } from '../config/db/dbConnection';
 
 export const getUserProfile = async (userId: number) => {
     try {
