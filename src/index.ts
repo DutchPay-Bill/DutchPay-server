@@ -2,10 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { db } from './config/db/dbConnection';
+
 // integration with .env
 dotenv.config();
 
 const app = express()
+// DB connection
 db();
 // body parser
 app.use(express.json());
@@ -24,5 +26,5 @@ app.get('/', (req, res) => {
 app.listen(server_port, ()=> {
   console.log(`server listening at http://localhost:${server_port}`)
 });
-// export app for vercel
+// export app for vercel deployment
 export default app
