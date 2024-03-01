@@ -25,7 +25,7 @@ app.use(rootRoute)
 // security middleware
 middleWares(app)
 // endpoint routes
-// app.use(router)
+app.use(router)
 // middleware for catch error
 app.use(errorCatch)
 // server port listening
