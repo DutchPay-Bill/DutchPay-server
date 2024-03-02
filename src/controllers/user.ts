@@ -5,27 +5,13 @@ import ErrorHandler from '../utils/errorHandler';
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.user?.userId;
-        if (!userId) {
-            throw new ErrorHandler({
-                success: false,
-                message: 'User ID not found in JWT token',
-                status: 401
-            });
-        }
-
         const userProfile = await getUserProfileService(userId);
-        if (!userProfile) {
-            throw new ErrorHandler({
-                success: false,
-                message: 'User profile not found',
-                status: 404
-            });
-        }
-
-        res.status(200).json({
+        throw new ErrorHandler({
             success: true,
-            data: userProfile
+            message: `${userProfile.fullname}`,
+            status: 200
         });
+         
     } catch (error) {
         next(error);
     }
