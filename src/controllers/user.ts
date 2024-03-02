@@ -1,16 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
-import { getUserProfile as getUserProfileService, registerUser } from '../services/userService';
-import ErrorHandler from '../utils/errorHandler';
+import { getProfile, registerUser } from '../services/userService';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = req.user?.userId;
-        const userProfile = await getUserProfileService(userId);
-        throw new ErrorHandler({
-            success: true,
-            message: `${userProfile.fullname}`,
-            status: 200
-        });
+        const userId = req.user?.id;
+        const userProfile = await getProfile(userId);
+        res.status(200).json({
+          success: true,
+          message: userProfile,
+        })
          
     } catch (error) {
         next(error);
