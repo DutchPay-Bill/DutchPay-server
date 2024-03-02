@@ -13,9 +13,7 @@ declare global {
 }
 
 const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const authentication = req.headers['authorization'];
-    const token = authentication && authentication.split(' ')[1];
-    // const token = req.cookies.access_token; // if change to cookies
+    const token = req.cookies.access_token;
 
     if (!token) {
         const error = new ErrorHandler({
@@ -40,7 +38,6 @@ const authenticationMiddleware = (req: Request, res: Response, next: NextFunctio
                 });
                 return next(error); 
             }
-
         } catch (error) {
             const err = new ErrorHandler({
                 success: false,
