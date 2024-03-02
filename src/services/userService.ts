@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import ErrorHandler from '../utils/errorHandler';
-import { disconnectDB, prisma } from '../config/db/dbConnection';
+import { prisma } from '../config/db/dbConnection';
+import { getEmail, postCreateUser } from "../dao/userDao";
 
 export const getUserProfile = async (userId: number) => {
     try {
@@ -73,37 +74,31 @@ const registerUser = async ({ email, password }: RegisterInput) => {
     //   });
     // }
 
-    const existEmail = await prisma.users.findUnique({
-        where: { email }
-    });
-
-    if (existEmail) {
-        throw new ErrorHandler({
-            success: false,
-            message: 'Email already registered, please use other email',
-            status: 409,
-        });
-    }
-
     try {
+        const userEmail = await getEmail(email)
+        if (userEmail) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Email already registered, please use other email',
+                status: 409,
+            });
+        }
+
         const hashedPass = await bcryptjs.hash(password, 10);
-        const newUser = await prisma.users.create({
-            data: { email, password: hashedPass }
-        });
+        const createUser = await postCreateUser(email, hashedPass)
+
         return {
             success: true,
-            data: newUser,
-            message: 'User registered successfully.'
-        };
+            message: "Successfully creating user",
+            data: createUser
+        }
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
             success: false,
-            message: error.message,
             status: error.status,
+            message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 }
 
