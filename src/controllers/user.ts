@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getUserProfile as getUserProfileService, registerUser } from '../services/userService';
+import { getUserProfile as getUserProfileService, registerUser, loginUser } from '../services/userService';
 import ErrorHandler from '../utils/errorHandler';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -47,4 +47,29 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
     }
   };
 
-export { getUserProfile, userRegister }
+  const userLogin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { username, password } = req.body;
+      const result = await loginUser({ username, password });
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          message: result.message,
+          token: result.data.token 
+        });
+      } else {
+        
+        res.status(500).json({
+          success: false,
+          message: result.message,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  
+  
+
+export { getUserProfile, userRegister, userLogin }

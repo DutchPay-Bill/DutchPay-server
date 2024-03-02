@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import ErrorHandler from '../utils/errorHandler';
 import { disconnectDB, prisma } from '../config/db/dbConnection';
+import jwt from 'jsonwebtoken';
 
 export const getUserProfile = async (userId: number) => {
     try {
@@ -108,4 +109,52 @@ const registerUser = async ({ email, password }: RegisterInput) => {
 }
 
 
-export { registerUser }
+const loginUser = async ({ username, password }: LoginInput) => {
+    try {
+        
+        const user = await prisma.users.findUnique({
+            where: { username }
+        });
+
+        
+        if (!user) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'User not found',
+                status: 404,
+            });
+        }
+
+        
+        const isPasswordValid = await bcryptjs.compare(password, user.password || '');
+
+        
+        if (!isPasswordValid) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Incorrect password',
+                status: 401,
+            });
+        }
+
+        
+        const token = jwt.sign({ userId: user.id, email: user.email, username: user.username }, process.env.SECRET_KEY || '');
+
+        return {
+            success: true,
+            data: { token },
+            message: 'User logged in successfully.'
+        };
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            message: error.message,
+            status: error.status || 500,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { registerUser, loginUser }
