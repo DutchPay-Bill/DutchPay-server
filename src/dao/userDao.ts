@@ -39,4 +39,20 @@ const postCreateUser = async (email : string, hashedPass: string )=> {
     }
 }
 
-export { getEmail, postCreateUser }
+const getUserById = async (id: number) => {
+    try {
+        const user = await prisma.users.findUnique({where: {id}})
+        return user
+    } catch (error) {
+        const err = error as Error
+        throw new ErrorHandler({
+            success: false,
+            status: 500,
+            message: err.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { getEmail, postCreateUser, getUserById }
