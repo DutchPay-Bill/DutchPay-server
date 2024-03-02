@@ -3,7 +3,7 @@ import ErrorHandler from '../utils/errorHandler';
 import { prisma } from '../config/db/dbConnection';
 import { getEmail, postCreateUser, getUserById } from "../dao/userDao";
 
-const getProfile = async (id: number) => {
+const getProfileService = async (id: number) => {
     try {
         const userProfile = await getUserById(id)
         
@@ -25,7 +25,7 @@ const getProfile = async (id: number) => {
 };
 
 //------ register ------
-const registerUser = async ({ email, password }: RegisterInput) => {
+const registerUserService = async ({ email, password }: RegisterInput) => {
     // if (!username) {
     //   throw new ErrorHandler({
     //     success: false,
@@ -89,4 +89,4 @@ const registerUser = async ({ email, password }: RegisterInput) => {
 }
 
 
-export { getProfile, registerUser }
+export { getProfileService, registerUserService }
