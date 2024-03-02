@@ -1,26 +1,12 @@
 import bcryptjs from "bcryptjs";
 import ErrorHandler from '../utils/errorHandler';
 import { prisma } from '../config/db/dbConnection';
-import { getEmail, postCreateUser } from "../dao/userDao";
+import { getEmail, postCreateUser, getUserById } from "../dao/userDao";
 
-export const getUserProfile = async (userId: number) => {
+const getProfile = async (id: number) => {
     try {
-        const userProfile = await prisma.users.findUnique({
-            where: {
-                id: userId
-            },
-            select: {
-                id: true,
-                username: true,
-                fullname: true,
-                phone_number: true,
-                email: true,
-                dob: true,
-                photo_profile: true,
-                created_at: true,
-                update_at: true,
-            }
-        });
+        const userProfile = await getUserById(id)
+        
         if (!userProfile) {
             throw new ErrorHandler({
                 success: false,
@@ -103,4 +89,4 @@ const registerUser = async ({ email, password }: RegisterInput) => {
 }
 
 
-export { registerUser }
+export { getProfile, registerUser }
