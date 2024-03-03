@@ -36,7 +36,5 @@ app.use(errorCatch)
 app.listen(server_port, ()=> {
   console.log(`server listening at http://localhost:${server_port}`)
 });
-// wa client
-client.initialize()
 // export app for vercel deployment
 export default app
