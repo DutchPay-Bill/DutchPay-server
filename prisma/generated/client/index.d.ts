@@ -9147,12 +9147,12 @@ export namespace Prisma {
   export type usersWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     username?: string
+    phone_number?: string
     email?: string
     AND?: usersWhereInput | usersWhereInput[]
     OR?: usersWhereInput[]
     NOT?: usersWhereInput | usersWhereInput[]
     fullname?: StringNullableFilter<"users"> | string | null
-    phone_number?: StringNullableFilter<"users"> | string | null
     password?: StringNullableFilter<"users"> | string | null
     bio?: StringNullableFilter<"users"> | string | null
     dob?: DateTimeNullableFilter<"users"> | Date | string | null
@@ -9163,7 +9163,7 @@ export namespace Prisma {
     orders?: OrdersListRelationFilter
     bill?: BillListRelationFilter
     payment_method_detail?: Payment_method_detailListRelationFilter
-  }, "id" | "username" | "email">
+  }, "id" | "username" | "phone_number" | "email">
 
   export type usersOrderByWithAggregationInput = {
     id?: SortOrder
