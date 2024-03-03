@@ -12,11 +12,10 @@ datasource db {
 
 model users {
   id                    Int            @id @default(autoincrement())
-  username              String         @unique
-  fullname              String
-  phone_number          String
+  username              String?         @unique
+  fullname              String?
+  phone_number          String?        @unique
   email                 String?        @unique
-  password              String?
   bio                   String?
   dob                   DateTime?
   photo_profile         String?
