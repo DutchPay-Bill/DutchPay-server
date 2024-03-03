@@ -38,10 +38,10 @@ const getEmail = async (email : string )=> {
     }
 }
 
-const postCreateUser = async (email : string, hashedPass: string )=> {
+const postCreateUser = async (phone : string)=> {
     try {
         const newUser = await prisma.users.create({
-            data: { email: email, password: hashedPass }
+            data: { phone_number: phone }
         })
 
         return newUser
