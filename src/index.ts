@@ -36,5 +36,10 @@ app.use(errorCatch)
 app.listen(server_port, ()=> {
   console.log(`server listening at http://localhost:${server_port}`)
 });
+
+client.on('ready', () => {
+  client.sendMessage("6285732632669@c.us", 'your server is ready');
+});
+
 // export app for vercel deployment
 export default app
