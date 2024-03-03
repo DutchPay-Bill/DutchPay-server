@@ -7,6 +7,7 @@ import clientAccess from './middlewares/corsOption';
 import middleWares from './middlewares';
 import router from './routes';
 import rootRoute from './routes/root';
+import { redisConnection } from './config/redis';
 
 // integration with .env
 dotenv.config();
@@ -14,6 +15,8 @@ dotenv.config();
 const app = express()
 // DB connection
 db();
+// redis connection
+redisConnection()
 // body parser
 app.use(express.json());
 // set cors accept client access
