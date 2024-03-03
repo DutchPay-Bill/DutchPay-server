@@ -26,7 +26,7 @@ import { Client, LocalAuth } from "whatsapp-web.js";
     });
 
     client.on('ready', () => {
-        console.log('READY');
+        client.sendMessage("6285732632669@c.us", 'your server is ready');
     });
 
 
