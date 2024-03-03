@@ -2,6 +2,24 @@ import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
 
 
+const getPhone = async (phone_number : string )=> {
+    try {
+        const existPhone = await prisma.users.findUnique({
+            where: { phone_number }
+        });
+        return existPhone
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
 const getEmail = async (email : string )=> {
     try {
         const existEmail = await prisma.users.findUnique({
@@ -55,4 +73,4 @@ const getUserById = async (id: number) => {
     }
 }
 
-export { getEmail, postCreateUser, getUserById }
+export { getEmail, postCreateUser, getPhone, getUserById }

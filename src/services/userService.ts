@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs";
 import ErrorHandler from '../utils/errorHandler';
 import { prisma } from '../config/db/dbConnection';
-import { getEmail, postCreateUser, getUserById } from "../dao/userDao";
+import { getEmail, postCreateUser, getUserById, getPhone } from "../dao/userDao";
 
 const getProfileService = async (id: number) => {
     try {
@@ -25,42 +25,31 @@ const getProfileService = async (id: number) => {
 };
 
 //------ register ------
-const registerUserService = async ({ email, password }: RegisterInput) => {
-    // if (!username) {
-    //   throw new ErrorHandler({
-    //     success: false,
-    //     message: "Username cannot be empty",
-    //     status: 400,
-    //   });
-    // }
-    // if (password.length < 6) {
-    //   throw new ErrorHandler({
-    //     success: false,
-    //     message: "Password must be at least 6 characters long",
-    //     status: 400,
-    //   });
-    // }
-    // if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
-    //   throw new ErrorHandler({
-    //     success: false,
-    //     message: "Password must contain both alphabetic and numeric characters",
-    //     status: 400,
-    //   });
-    // }
-
-    // const existUser = await prisma.user.findUnique({
-    //   where: { username }
-    // });
-
-    // if (existUser) {
-    //   throw new ErrorHandler({
-    //     success: false,
-    //     message: 'Username already exists',
-    //     status: 409,
-    //   });
-    // }
-
+const registerUserService = async ({ phone, email, password }: RegisterInput) => {
+    if (password.length < 6) {
+      throw new ErrorHandler({
+        success: false,
+        message: "Password must be at least 6 characters long",
+        status: 400,
+      });
+    }
+    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+      throw new ErrorHandler({
+        success: false,
+        message: "Password must contain both alphabetic and numeric characters",
+        status: 400,
+      });
+    }
+    
     try {
+        const userPhone = await getPhone(phone)
+        if (userPhone) {
+          throw new ErrorHandler({
+            success: false,
+            message: 'Phone Number already registered, please use other Phone Number',
+            status: 409,
+          });
+        }
         const userEmail = await getEmail(email)
         if (userEmail) {
             throw new ErrorHandler({
