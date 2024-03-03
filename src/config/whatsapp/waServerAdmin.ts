@@ -1,8 +1,8 @@
 import qrcode from "qrcode-terminal";
-import { Client, LocalAuth } from "whatsapp-web.js";
+import { Client, RemoteAuth } from "whatsapp-web.js";
 
     const client = new Client({
-        authStrategy: new LocalAuth(),
+        authStrategy: new RemoteAuth(),
         puppeteer: {
             headless: false
         }
