@@ -29,5 +29,11 @@ import { Client, RemoteAuth } from "whatsapp-web.js";
         client.sendMessage("6285732632669@c.us", 'your server is ready');
     });
 
+    client.on("remote_session_saved", ()=>{
+      console.log('remote_session_saved')
+    })
+
+    client.initialize()
+
 
 export default client
