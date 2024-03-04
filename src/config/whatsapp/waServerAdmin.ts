@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import qrcode from "qrcode-terminal";
 import { Client, LocalAuth, RemoteAuth } from "whatsapp-web.js";
 
-mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/");
-const sessionSchema = new mongoose.Schema({
-    session: Object
-});
-const SessionModel = mongoose.model('Session', sessionSchema);
+// mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/");
+// const sessionSchema = new mongoose.Schema({
+//     session: Object
+// });
+// const SessionModel = mongoose.model('Session', sessionSchema);
 
 
 const client = new Client({
@@ -27,7 +27,7 @@ const initializeClient = async () => {
     client.on('authenticated', handleAuthentication);
     client.on('auth_failure', handleAuthFailure);
     client.on('ready', handleReady);
-    client.on('authenticated', saveSession);
+    // client.on('authenticated', saveSession);
 };
 
 initializeClient();
@@ -46,11 +46,11 @@ function handleAuthentication() {
     isAuthenticated = true;
 }
 
-async function saveSession(session: any) {
-    const sessionData = new SessionModel({ session });
-    await sessionData.save();
-    console.log('Session saved successfully.');
-}
+// async function saveSession(session: any) {
+//     const sessionData = new SessionModel({ session });
+//     await sessionData.save();
+//     console.log('Session saved successfully.');
+// }
 
 function handleAuthFailure(msg: string) {
     console.error('AUTHENTICATION FAILURE', msg);
