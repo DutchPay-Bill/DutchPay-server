@@ -1,5 +1,5 @@
 // ------ generate & send OTP ------
-import client from "./waServerAdmin";
+import waConnection from "./waServerAdmin";
 
 const getOtp = () => {
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -11,7 +11,7 @@ const sendOtp = async (phone: string, otp: string,) => {
     const msg = `your otp is ${otp}`;
     try {
         console.log("Sending OTP...");
-        const response = await client.sendMessage(`${phone}@c.us`, msg);
+        await waConnection.client.sendMessage(`${phone}@c.us`, msg);
         console.log(`OTP sent to ${phone}.`);
         return true
     } catch (error) {

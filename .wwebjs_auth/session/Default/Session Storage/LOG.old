@@ -1,2 +1,3 @@
-2024/03/04-11:05:11.000 4f50 Creating DB D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\session\Default\Session Storage since it was missing.
-2024/03/04-11:05:11.022 4f50 Reusing MANIFEST D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\session\Default\Session Storage/MANIFEST-000001
+2024/03/04-17:04:57.221 a14 Reusing MANIFEST D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\session\Default\Session Storage/MANIFEST-000001
+2024/03/04-17:04:57.221 a14 Recovering log #3
+2024/03/04-17:04:57.222 a14 Reusing old log D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\session\Default\Session Storage/000003.log 

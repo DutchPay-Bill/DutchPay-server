@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { getProfileService, registerUserService, sendOtpService, verifyOtpService } from '../services/userService';
 import client from '../config/whatsapp/waServerAdmin';
+import waConnection from '../config/whatsapp/waServerAdmin';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -21,7 +22,7 @@ const sendOtp = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { phone_number } = req.body
     const result = await sendOtpService(phone_number)
-    if( result.success ){
+    if (result.success) {
       res.status(200).json({
         success: true,
         message: result.message,
@@ -38,7 +39,7 @@ const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { phone_number, otp } = req.body
     const result = await verifyOtpService(phone_number, otp)
-    if( result?.success ){
+    if (result?.success) {
       res.status(200).json({
         success: true,
         message: result.message,
@@ -52,12 +53,15 @@ const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
 
 // ------ WA admin login ------
 const waAdminLogin = async (req: Request, res: Response, next: NextFunction) => {
-  await client.initialize()
   try {
-    res.send(`Successfully logged into WhatsApp`);
+    const authenticationResponse = {
+      qr_code: waConnection.getCode(),
+      auth: waConnection.authenticated(),
+      success: true
+    };
+    return authenticationResponse;
   } catch (error) {
-    console.error("Error connecting to WhatsApp:", error);
-    res.status(500).send("Error connecting to WhatsApp");
+    throw new Error('Authentication failed');
   }
 }
 
@@ -65,7 +69,7 @@ const waAdminLogin = async (req: Request, res: Response, next: NextFunction) => 
 const userRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { phone } = req.body;
-    const result = await registerUserService( phone )
+    const result = await registerUserService(phone)
     if (result.success) {
       res.status(200).json({
         success: true,

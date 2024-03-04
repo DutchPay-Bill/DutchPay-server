@@ -1,30 +1,49 @@
 import qrcode from "qrcode-terminal";
 import { Client, LocalAuth, RemoteAuth } from "whatsapp-web.js";
 
-    const client = new Client({
-        authStrategy: new LocalAuth(),
-    });
+const client = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+      args: ['--no-sandbox']
+}
+});
 
-    client.on('loading_screen', (percent, message) => {
-        console.log('LOADING SCREEN', percent, message);
-    });
+let isAuthenticated = false;
+let qrCode : any;
 
-    client.on('qr', (qr) => {
-        qrcode.generate(qr, { small: true })
-        console.log('QR RECEIVED', qr);
-    });
+client.initialize();
 
-    client.on('authenticated', () => {
-        console.log('AUTHENTICATED');
-    });
+client.on('loading_screen', handleLoadingScreen);
+client.on('qr', handleQRCode);
+client.on('authenticated', handleAuthentication);
+client.on('auth_failure', handleAuthFailure);
+client.on('ready', handleReady);
 
-    client.on('auth_failure', msg => {
-        console.error('AUTHENTICATION FAILURE', msg);
-    });
+async function handleLoadingScreen(percent: any, message: any) {
+    console.log('LOADING SCREEN', percent, message);
+}
 
-    client.on('ready', () => {
-        client.sendMessage("6285732632669@c.us", 'your server is ready');
-    });
+function handleQRCode(qr: any) {
+    qrcode.generate(qr, { small: true });
+    qrCode = qr;
+}
+
+function handleAuthentication() {
+    console.log('AUTHENTICATED');
+    isAuthenticated = true;
+}
+
+function handleAuthFailure(msg: string) {
+    console.error('AUTHENTICATION FAILURE', msg);
+}
+
+async function handleReady() {
+    console.log('READY');
+}
 
 
-export default client
+const authenticated = () => isAuthenticated;  
+const getCode = () => qrCode;
+const waConnection = { client, authenticated, getCode}
+
+export default waConnection
