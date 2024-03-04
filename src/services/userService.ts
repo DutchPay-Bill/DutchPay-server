@@ -1,7 +1,5 @@
 import ErrorHandler from '../utils/errorHandler';
-import { postCreateUser, getUserById, getPhone } from "../dao/userDao";
-import { redisClient } from "../config/redis";
-import { getOtp, sendOtp } from '../config/whatsapp/otpConfig';
+import { disconnectDB, prisma } from '../config/db/dbConnection';
 
 const getProfileService = async (id: number) => {
     try {
@@ -112,4 +110,4 @@ const registerUserService = async (phone: string) => {
 }
 
 
-export { getProfileService, registerUserService, sendOtpService, verifyOtpService }
+export { registerUser }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProfile, sendOtp, userRegister, verifyOtp, waAdminLogin } from '../../../controllers/user';
+import { getUserProfile, userLogin, sendOtp, userRegister, verifyOtp, waAdminLogin } from '../../../controllers/user';
 
 const userRouter = express.Router()
 
