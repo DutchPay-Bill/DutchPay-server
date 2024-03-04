@@ -7,7 +7,6 @@ const sessionSchema = new mongoose.Schema({
 });
 const SessionModel = mongoose.model('Session', sessionSchema);
 
-// Connect to MongoDB
 mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/");
 
 const client = new Client({
@@ -20,14 +19,8 @@ const client = new Client({
 let isAuthenticated = false;
 let qrCode: any;
 
-// Wrap the asynchronous code in an async function
 const initializeClient = async () => {
-    const sessionData = await SessionModel.findOne();
-    if (sessionData) {
-        client.initialize({ session: sessionData.session });
-    } else {
-        client.initialize();
-    }
+    client.initialize();
 
     client.on('loading_screen', handleLoadingScreen);
     client.on('qr', handleQRCode);
@@ -37,7 +30,7 @@ const initializeClient = async () => {
     client.on('authenticated', saveSession);
 };
 
-initializeClient(); // Call the async function to initialize the client
+initializeClient();
 
 async function handleLoadingScreen(percent: any, message: any) {
     console.log('LOADING SCREEN', percent, message);
@@ -55,7 +48,7 @@ function handleAuthentication() {
 
 async function saveSession(session: any) {
     const sessionData = new SessionModel({ session });
-    await sessionData.save(); // Make sure to await the save operation
+    await sessionData.save();
     console.log('Session saved successfully.');
 }
 
