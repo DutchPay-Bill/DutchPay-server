@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getProfileService, registerUserService, sendOtpService, verifyOtpService, loginUser } from '../services/userService';
-import client from '../config/whatsapp/waServerAdmin';
+import { getProfileService, registerUserService, sendOtpService, verifyOtpService, loginUserService } from '../services/userService';
 import waConnection from '../config/whatsapp/waServerAdmin';
 import ErrorHandler from '../utils/errorHandler';
 
@@ -85,7 +84,7 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
   const userLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { username, password } = req.body;
-      const result = await loginUser({ username, password });
+      const result = await loginUserService({ username, password });
       if (result.success) {
         res.status(200).json({
           success: true,
