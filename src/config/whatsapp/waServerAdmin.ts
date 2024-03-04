@@ -17,8 +17,6 @@ const client = new Client({
 
 mongoose.connect(process.env.MONGO_URI!).then(() => {
 
-    client.initialize();
-
     client.on('loading_screen', (percent, message) => {
         console.log('LOADING SCREEN', percent, message);
     });
