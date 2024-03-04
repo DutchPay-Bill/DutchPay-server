@@ -1,36 +1,47 @@
 import mongoose from "mongoose";
 import qrcode from "qrcode-terminal";
 import { Client, LocalAuth, RemoteAuth } from "whatsapp-web.js";
-
-// mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/");
-// const sessionSchema = new mongoose.Schema({
-//     session: Object
-// });
-// const SessionModel = mongoose.model('Session', sessionSchema);
-
-
-const client = new Client({
-    authStrategy: new LocalAuth(),
-    puppeteer: {
-        args: ['--no-sandbox']
-    }
-});
+import { MongoStore } from "wwebjs-mongo";
 
 let isAuthenticated = false;
 let qrCode: any;
 
-const initializeClient = async () => {
-    client.initialize();
+const clientInit =mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/")
+    .then(() => {
+        const store = new MongoStore({
+            mongoose: mongoose,
+            collectionName: 'sessions',
+            ttl: 30 * 24 * 60 * 60 // 30 days
+        });
 
-    client.on('loading_screen', handleLoadingScreen);
-    client.on('qr', handleQRCode);
-    client.on('authenticated', handleAuthentication);
-    client.on('auth_failure', handleAuthFailure);
-    client.on('ready', handleReady);
-    // client.on('authenticated', saveSession);
-};
+        const client = new Client({
+            authStrategy: new RemoteAuth({
+                store: store,
+                backupSyncIntervalMs: 300000
+            }),
+            puppeteer: {
+                args: ['--no-sandbox']
+            }
+        });
 
-initializeClient();
+        client.initialize();
+
+        // Set up client event listeners
+        client.on('loading_screen', handleLoadingScreen);
+        client.on('qr', handleQRCode);
+        client.on('authenticated', handleAuthentication);
+        client.on('auth_failure', handleAuthFailure);
+        client.on('ready', handleReady);
+        client.on('remote_session_saved', async () => {
+            console.log('session saved')
+        });
+        return client
+    })
+    .catch(error => {
+        console.error('Error connecting to MongoDB:', error);
+    });
+
+// Your event handler functions here
 
 async function handleLoadingScreen(percent: any, message: any) {
     console.log('LOADING SCREEN', percent, message);
@@ -46,12 +57,6 @@ function handleAuthentication() {
     isAuthenticated = true;
 }
 
-// async function saveSession(session: any) {
-//     const sessionData = new SessionModel({ session });
-//     await sessionData.save();
-//     console.log('Session saved successfully.');
-// }
-
 function handleAuthFailure(msg: string) {
     console.error('AUTHENTICATION FAILURE', msg);
 }
@@ -62,6 +67,6 @@ async function handleReady() {
 
 const authenticated = () => isAuthenticated;
 const getCode = () => qrCode;
-const waConnection = { client, authenticated, getCode };
+const waConnection = { clientInit, authenticated, getCode };
 
 export default waConnection;

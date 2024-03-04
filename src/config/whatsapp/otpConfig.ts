@@ -1,4 +1,5 @@
 // ------ generate & send OTP ------
+import { Client } from "whatsapp-web.js";
 import waConnection from "./waServerAdmin";
 
 const getOtp = () => {
@@ -7,17 +8,23 @@ const getOtp = () => {
     return otp.toString();
 }
 
-const sendOtp = async (phone: string, otp: string,) => {
+// Assuming `clientInit` is correctly set up to always resolve to a `Client` object
+const sendOtp = async (phone: string, otp: string) => {
     const msg = `your otp is ${otp}`;
     try {
         console.log("Sending OTP...");
-        await waConnection.client.sendMessage(`${phone}@c.us`, msg);
+        // Correctly await the clientInit promise to get the Client object
+        const client = await waConnection.clientInit as Client;
+        // Now you can call sendMessage on the client
+        await client.sendMessage(`${phone}@c.us`, msg);
         console.log(`OTP sent to ${phone}.`);
-        return true
+        return true;
     } catch (error) {
         console.error("Error occurred:", error);
+        return false; // Return false or handle the error as needed
     }
 };
+
 
 
 

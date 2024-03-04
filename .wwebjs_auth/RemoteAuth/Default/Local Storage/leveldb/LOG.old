@@ -1,0 +1,4 @@
+2024/03/05-04:07:00.650 3560 Reusing MANIFEST D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb/MANIFEST-000001
+2024/03/05-04:07:00.651 3560 Recovering log #3
+2024/03/05-04:07:00.651 3560 (ignoring error) D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb/000003.log: dropping 30794 bytes; Corruption: checksum mismatch
+2024/03/05-04:07:00.651 3560 Reusing old log D:\repository\RevouNext\Project 1\DutchPay-server\.wwebjs_auth\RemoteAuth\Default\Local Storage\leveldb/000003.log 
