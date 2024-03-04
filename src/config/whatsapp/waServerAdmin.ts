@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 import qrcode from "qrcode-terminal";
 import { Client, LocalAuth, RemoteAuth } from "whatsapp-web.js";
 
+mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/");
 const sessionSchema = new mongoose.Schema({
     session: Object
 });
 const SessionModel = mongoose.model('Session', sessionSchema);
 
-mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/");
 
 const client = new Client({
     authStrategy: new LocalAuth(),
