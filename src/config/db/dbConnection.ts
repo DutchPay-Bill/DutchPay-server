@@ -4,7 +4,7 @@ export const prisma = new PrismaClient({
     log: ["info"]
   });
   
-export const connectDB = async ()=> {
+const connectDB = async ()=> {
   return await prisma.$connect();
 }
 
