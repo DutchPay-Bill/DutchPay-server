@@ -13,9 +13,7 @@ const sendOtp = async (phone: string, otp: string) => {
     const msg = `your otp is ${otp}`;
     try {
         console.log("Sending OTP...");
-        // Correctly await the clientInit promise to get the Client object
         const client = await waConnection.clientInit as Client;
-        // Now you can call sendMessage on the client
         await client.sendMessage(`${phone}@c.us`, msg);
         console.log(`OTP sent to ${phone}.`);
         return true;

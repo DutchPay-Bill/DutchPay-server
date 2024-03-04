@@ -6,7 +6,7 @@ import { MongoStore } from "wwebjs-mongo";
 let isAuthenticated = false;
 let qrCode: any;
 
-const clientInit =mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/")
+const clientInit =mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/test")
     .then(() => {
         const store = new MongoStore({
             mongoose: mongoose,
@@ -20,7 +20,7 @@ const clientInit =mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb
                 backupSyncIntervalMs: 300000
             }),
             puppeteer: {
-                args: ['--no-sandbox']
+                headless: false
             }
         });
 
