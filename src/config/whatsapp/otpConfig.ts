@@ -1,4 +1,5 @@
 // ------ generate & send OTP ------
+
 import client from "./waServerAdmin";
 
 const getOtp = () => {
