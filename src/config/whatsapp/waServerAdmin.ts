@@ -24,7 +24,7 @@ async function handleLoadingScreen(percent: any, message: any) {
 }
 
 function handleQRCode(qr: any) {
-    qrcode.generate(qr, { small: true });
+    // qrcode.generate(qr, { small: true });
     qrCode = qr;
 }
 
