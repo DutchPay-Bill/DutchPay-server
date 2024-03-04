@@ -8,7 +8,6 @@ import middleWares from './middlewares';
 import router from './routes';
 import rootRoute from './routes/root';
 import { redisConnection } from './config/redis';
-import client from './config/whatsapp/waServerAdmin';
 
 // integration with .env
 dotenv.config();
@@ -36,10 +35,5 @@ app.use(errorCatch)
 app.listen(server_port, ()=> {
   console.log(`server listening at http://localhost:${server_port}`)
 });
-
-client.on('ready', () => {
-  client.sendMessage("6285732632669@c.us", 'your server is ready');
-});
-
 // export app for vercel deployment
 export default app

@@ -29,7 +29,7 @@ const getProfileService = async (id: number) => {
 const sendOtpService = async (phone: string) => {
     const otp = getOtp()
     try {
-        const otpCode = await sendOtp(phone, otp);
+        const otpCode = await sendOtp(phone, otp,);
         if (otpCode) {
             const createRedis = await redisClient.set(phone, otp);
             await redisClient.expire(phone, 600)
