@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProfile, userLogin, verifyOtp, waAdminLogin, userRegisterbyPhone } from '../../../controllers/user';
+import { getUserProfile, userLogin, userRegisterbyPhone } from '../../../controllers/user';
 import passport from 'passport';
 import JWT_TOKEN from '../../../config/jwt/jwt';
 import jwt from "jsonwebtoken"
@@ -9,8 +9,8 @@ const userRouter = express.Router()
 userRouter.get('/', getUserProfile)
 userRouter.post('/', userRegisterbyPhone)
 // userRouter.post('/send-otp', sendOtp)
-userRouter.post('/verify-otp', verifyOtp)
-userRouter.get('/wa-admin', waAdminLogin)
+// userRouter.post('/verify-otp', verifyOtp)
+// userRouter.get('/wa-admin', waAdminLogin)
 
 // google auth
 userRouter.get("/login", (req, res) => {
