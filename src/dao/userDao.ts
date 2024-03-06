@@ -24,10 +24,13 @@ const getPhone = async (phone_number : string )=> {
 
 const getEmail = async (email : string )=> {
     try {
-        const existEmail = await prisma.users.findUnique({
+        await prisma.users.findUnique({
             where: { email }
         });
-        return existEmail
+        const user = await prisma.users.findUnique({
+            where: {email: email}
+        })
+        return user?.id
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -76,13 +79,18 @@ const getUserById = async (id: number) => {
 }
 
 
-const postCreateUserGoogle = async (email : string, username: string)=> {
+const postCreateUserGoogle = async (fullname: string, email : string)=> {
     try {
-        const newUser = await prisma.users.create({
-            data: { email: email, username: username }
+        await prisma.users.create({
+            data: {fullname: fullname, email: email }
+        })
+        const user = await prisma.users.findUnique({
+            where:{email: email} 
         })
 
-        return newUser
+        return {
+            userId: user?.id
+        }
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({

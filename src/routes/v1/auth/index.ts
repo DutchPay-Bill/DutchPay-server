@@ -3,6 +3,7 @@ import { userLogin, userRegisterbyPhone } from '../../../controllers/user';
 import passport from 'passport';
 import JWT_TOKEN from '../../../config/jwt/jwt';
 import jwt from "jsonwebtoken"
+import { add } from 'date-fns';
 
 const authRouter = express.Router()
 
@@ -10,17 +11,22 @@ authRouter.post('/login', userLogin)
 authRouter.post('/register', userRegisterbyPhone)
 
 // google auth
-authRouter.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-authRouter.get("auth/google/callback", passport.authenticate('google', { session: false }), (req, res) => {
+authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+authRouter.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
     if (!req.user) {
         return res.status(401).json({ success: false, message: "User authentication failed" });
     }
     const payload = {
-        username: (req.user as any).displayName,
+        id: (req.user as any).id,
     };
-    const token = jwt.sign(payload, JWT_TOKEN!, { expiresIn: '1y' });
+    const token = jwt.sign(payload, JWT_TOKEN!, { expiresIn: '7d' });
+    const currentDate = new Date()
+    const expiredToken = add(currentDate, { weeks: 1 });
     res.cookie('access_token', token, { httpOnly: true });
-    res.status(200).json({ success: true, data: payload });
+    res.status(200).json({
+        success: true,
+        message: 'User logged in successfully.',
+        expired_cookies: expiredToken });
 });
 
 export default authRouter;

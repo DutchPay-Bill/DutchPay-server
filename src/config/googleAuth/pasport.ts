@@ -20,7 +20,6 @@ passport.use(
       const user = await getEmail(profile.emails?.[0].value as string);;
 
       try {
-        // If user doesn't exist creates a new user. (similar to sign up)
         if (!user) {
           const newUser = await registerUserbyGoogleService(profile.displayName, profile.emails?.[0].value as string);
           if (newUser) {
