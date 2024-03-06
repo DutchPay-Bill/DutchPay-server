@@ -22,7 +22,11 @@ authRouter.get('/google/callback', passport.authenticate('google', { session: fa
     const token = jwt.sign(payload, JWT_TOKEN!, { expiresIn: '7d' });
     const currentDate = new Date()
     const expiredToken = add(currentDate, { weeks: 1 });
-    res.cookie('access_token', token, { httpOnly: true });
+    const oneWeekInSeconds = 7 * 24 * 3600;
+    res.cookie('access_token', token, {
+        maxAge: oneWeekInSeconds * 1000,
+        httpOnly: true,
+        path: '/' });
     res.status(200).json({
         success: true,
         message: 'User logged in successfully.',
