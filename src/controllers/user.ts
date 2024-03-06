@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { getProfileService, registerUserService, sendOtpService, verifyOtpService, loginUserService } from '../services/userService';
-import waConnection from '../config/whatsapp/waServerAdmin';
+import { getProfileService, verifyOtpService, loginUserService, registerUserbyPhoneService } from '../services/userService';
+// import waConnection from '../config/whatsapp/waServerAdmin';
 import ErrorHandler from '../utils/errorHandler';
+import { JwtPayload } from 'jsonwebtoken';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id;
+    const userId = (req.user as JwtPayload).id;
     const userProfile = await getProfileService(userId);
     res.status(200).json({
       success: true,
@@ -18,21 +19,21 @@ const getUserProfile = async (req: Request, res: Response, next: NextFunction) =
 };
 
 // ------ Send OTP ------
-const sendOtp = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { phone_number } = req.body
-    const result = await sendOtpService(phone_number)
-    if (result.success) {
-      res.status(200).json({
-        success: true,
-        message: result.message,
-        data: result.data
-      })
-    }
-  } catch (error) {
-    next(error);
-  }
-}
+// const sendOtp = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { phone_number } = req.body
+//     const result = await sendOtpService(phone_number)
+//     if (result.success) {
+//       res.status(200).json({
+//         success: true,
+//         message: result.message,
+//         data: result.data
+//       })
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 
 // ------ Verify OTP ------
 const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
@@ -55,8 +56,8 @@ const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
 const waAdminLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authenticationResponse = {
-      qr_code: waConnection.getCode(),
-      auth: waConnection.authenticated(),
+      // qr_code: waConnection.getCode(),
+      // auth: waConnection.authenticated(),
       success: true
     };
     return authenticationResponse;
@@ -65,11 +66,11 @@ const waAdminLogin = async (req: Request, res: Response, next: NextFunction) => 
   }
 }
 
-//------ Create user ------
-const userRegister = async (req: Request, res: Response, next: NextFunction) => {
+//------ Create user by phone ------
+const userRegisterbyPhone = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { phone } = req.body;
-    const result = await registerUserService(phone)
+    const result = await registerUserbyPhoneService(phone)
     if (result.success) {
       res.status(200).json({
         success: true,
@@ -102,8 +103,6 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
       next(error);
     }
   };
-  
-  
-  
+ 
 
-export { getUserProfile, userRegister, userLogin, sendOtp, verifyOtp, waAdminLogin }
+export { getUserProfile, userRegisterbyPhone, userLogin, verifyOtp, waAdminLogin }

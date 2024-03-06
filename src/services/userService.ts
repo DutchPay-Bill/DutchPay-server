@@ -1,8 +1,8 @@
 import ErrorHandler from '../utils/errorHandler';
 import { disconnectDB, prisma } from '../config/db/dbConnection';
 import { redisClient } from '../config/redis';
-import { getOtp, sendOtp } from '../config/whatsapp/otpConfig';
-import { getPhone, getUserById, postCreateUser } from '../dao/userDao';
+// import { getOtp, sendOtp } from '../config/whatsapp/otpConfig';
+import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone } from '../dao/userDao';
 import * as jwt from "jsonwebtoken"
 
 const getProfileService = async (id: number) => {
@@ -28,28 +28,28 @@ const getProfileService = async (id: number) => {
 };
 
 // ------ Send OTP service ------
-const sendOtpService = async (phone: string) => {
-    const otp = getOtp()
-    try {
-        const otpCode = await sendOtp(phone, otp,);
-        if (otpCode) {
-            const createRedis = await redisClient.set(phone, otp);
-            await redisClient.expire(phone, 600)
-        }
-        return {
-            success: true,
-            message: "OTP successfully sent to your WhatsApp.",
-            data: otp
-        }
-    } catch (error: any) {
-        console.error(error);
-        throw new ErrorHandler({
-            success: false,
-            status: error.status,
-            message: error.message,
-        });
-    }
-}
+// const sendOtpService = async (phone: string) => {
+//     const otp = getOtp()
+//     try {
+//         const otpCode = await sendOtp(phone, otp,);
+//         if (otpCode) {
+//             const createRedis = await redisClient.set(phone, otp);
+//             await redisClient.expire(phone, 600)
+//         }
+//         return {
+//             success: true,
+//             message: "OTP successfully sent to your WhatsApp.",
+//             data: otp
+//         }
+//     } catch (error: any) {
+//         console.error(error);
+//         throw new ErrorHandler({
+//             success: false,
+//             status: error.status,
+//             message: error.message,
+//         });
+//     }
+// }
 
 // ------ Verify OTP service ------
 const verifyOtpService = async (phone: string, otp: string) => {
@@ -84,8 +84,8 @@ const verifyOtpService = async (phone: string, otp: string) => {
     }
 }
 
-// ------ Register service ------
-const registerUserService = async (phone: string) => {
+// ------ Register by Phone service ------
+const registerUserbyPhoneService = async (phone: string) => {
     try {
         const userPhone = await getPhone(phone)
         if (userPhone) {
@@ -96,7 +96,7 @@ const registerUserService = async (phone: string) => {
             });
         }
 
-        const createUser = await postCreateUser(phone)
+        const createUser = await postCreateUserPhone(phone)
 
         return {
             success: true,
@@ -162,4 +162,24 @@ const loginUserService = async ({ username, password }: LoginInput) => {
     }
 }
 
-export {getProfileService,  registerUserService, sendOtpService, verifyOtpService, loginUserService }
+// ------ Register by Google service ------
+const registerUserbyGoogleService = async (email: string, username: string) => {
+    try {
+        const createUser = await postCreateUserGoogle(email, username)
+
+        return {
+            success: true,
+            message: "User registered successfully",
+            data: createUser
+        }
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+}
+
+export {getProfileService,  registerUserbyPhoneService, verifyOtpService, loginUserService, registerUserbyGoogleService }
