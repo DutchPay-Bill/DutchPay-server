@@ -1,9 +1,9 @@
 import ErrorHandler from '../utils/errorHandler';
-import { disconnectDB, prisma } from '../config/db/dbConnection';
-import { redisClient } from '../config/redis';
-// import { getOtp, sendOtp } from '../config/whatsapp/otpConfig';
 import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone } from '../dao/userDao';
+import bcryptjs from "bcryptjs"
 import * as jwt from "jsonwebtoken"
+import { add } from "date-fns";
+import JWT_TOKEN from '../config/jwt/jwt';
 
 const getProfileService = async (id: number) => {
     try {
@@ -26,63 +26,6 @@ const getProfileService = async (id: number) => {
         });
     }
 };
-
-// ------ Send OTP service ------
-// const sendOtpService = async (phone: string) => {
-//     const otp = getOtp()
-//     try {
-//         const otpCode = await sendOtp(phone, otp,);
-//         if (otpCode) {
-//             const createRedis = await redisClient.set(phone, otp);
-//             await redisClient.expire(phone, 600)
-//         }
-//         return {
-//             success: true,
-//             message: "OTP successfully sent to your WhatsApp.",
-//             data: otp
-//         }
-//     } catch (error: any) {
-//         console.error(error);
-//         throw new ErrorHandler({
-//             success: false,
-//             status: error.status,
-//             message: error.message,
-//         });
-//     }
-// }
-
-// ------ Verify OTP service ------
-const verifyOtpService = async (phone: string, otp: string) => {
-    try {
-        const otpValue = await redisClient.get(phone);
-        if (!otpValue) {
-            throw new ErrorHandler({
-                status: 400,
-                success: false,
-                message: "OTP has expired. Please request a new one.",
-            })
-        } else if (otp !== otpValue) {
-            throw new ErrorHandler({
-                status: 409,
-                success: false,
-                message: "The OTP entered is incorrect. Please try again.",
-            })
-        } else if (otp == otpValue) {
-            return {
-                success: true,
-                message: "Phone number verified successfully.",
-                data: phone
-            }
-        }
-    } catch (error: any) {
-        console.error(error);
-        throw new ErrorHandler({
-            success: false,
-            status: error.status,
-            message: error.message,
-        });
-    }
-}
 
 // ------ Register by Phone service ------
 const registerUserbyPhoneService = async (phone: string) => {
@@ -114,14 +57,9 @@ const registerUserbyPhoneService = async (phone: string) => {
 }
 
 
-const loginUserService = async ({ username, password }: LoginInput) => {
-    try {
-        
-        const user = await prisma.users.findUnique({
-            where: { username }
-        });
-
-        
+const loginUserService = async ({ phone_number, password }: LoginInput) => {
+    try {  
+        const user = await getPhone(phone_number)
         if (!user) {
             throw new ErrorHandler({
                 success: false,
@@ -129,26 +67,23 @@ const loginUserService = async ({ username, password }: LoginInput) => {
                 status: 404,
             });
         }
-
-        
-        // const isPasswordValid = await bcryptjs.compare(password, user.password || '');
-
-        
-        // if (!isPasswordValid) {
-        //     throw new ErrorHandler({
-        //         success: false,
-        //         message: 'Incorrect password',
-        //         status: 401,
-        //     });
-        // }
-
-        
-        const token = jwt.sign({ userId: user.id, email: user.email, username: user.username }, process.env.SECRET_KEY || '');
-
+        const isPasswordValid = await bcryptjs.compare(password, user.password || '');
+        if (!isPasswordValid) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Incorrect password',
+                status: 401,
+            });
+        }        
+        const currentDate = new Date()
+        const expiredToken = add(currentDate, { weeks: 1 });
+        const accessToken = jwt.sign(
+            { id: user.id }, JWT_TOKEN!, {expiresIn: '7d'}
+        );
         return {
             success: true,
-            data: { token },
-            message: 'User logged in successfully.'
+            message: 'User logged in successfully.',
+            data: { accessToken, expiredToken },
         };
     } catch (error: any) {
         console.error(error);
@@ -157,8 +92,6 @@ const loginUserService = async ({ username, password }: LoginInput) => {
             message: error.message,
             status: error.status || 500,
         });
-    } finally {
-        await disconnectDB();
     }
 }
 
@@ -182,4 +115,4 @@ const registerUserbyGoogleService = async (email: string, username: string) => {
     }
 }
 
-export {getProfileService,  registerUserbyPhoneService, verifyOtpService, loginUserService, registerUserbyGoogleService }
+export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService }
