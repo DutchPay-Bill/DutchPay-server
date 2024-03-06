@@ -36,35 +36,35 @@ const getUserProfile = async (req: Request, res: Response, next: NextFunction) =
 // }
 
 // ------ Verify OTP ------
-const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { phone_number, otp } = req.body
-    const result = await verifyOtpService(phone_number, otp)
-    if (result?.success) {
-      res.status(200).json({
-        success: true,
-        message: result.message,
-        data: result.data
-      })
-    }
-  } catch (error) {
-    next(error);
-  }
-}
+// const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { phone_number, otp } = req.body
+//     const result = await verifyOtpService(phone_number, otp)
+//     if (result?.success) {
+//       res.status(200).json({
+//         success: true,
+//         message: result.message,
+//         data: result.data
+//       })
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 
 // ------ WA admin login ------
-const waAdminLogin = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const authenticationResponse = {
+// const waAdminLogin = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const authenticationResponse = {
       // qr_code: waConnection.getCode(),
       // auth: waConnection.authenticated(),
-      success: true
-    };
-    return authenticationResponse;
-  } catch (error) {
-    throw new Error('Authentication failed');
-  }
-}
+//       success: true
+//     };
+//     return authenticationResponse;
+//   } catch (error) {
+//     throw new Error('Authentication failed');
+//   }
+// }
 
 //------ Create user by phone ------
 const userRegisterbyPhone = async (req: Request, res: Response, next: NextFunction) => {
@@ -105,4 +105,4 @@ const userRegisterbyPhone = async (req: Request, res: Response, next: NextFuncti
   };
  
 
-export { getUserProfile, userRegisterbyPhone, userLogin, verifyOtp, waAdminLogin }
+export { getUserProfile, userRegisterbyPhone, userLogin }
