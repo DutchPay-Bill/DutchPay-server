@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { getProfileService, loginUserService, registerUserbyPhoneService } from '../services/userService';
-// import waConnection from '../config/whatsapp/waServerAdmin';
-import ErrorHandler from '../utils/errorHandler';
 import { JwtPayload } from 'jsonwebtoken';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -34,6 +32,7 @@ const userRegisterbyPhone = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
+
 //------ Login by phone ------
 const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -49,7 +48,7 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(200).json({
         success: true,
         message: result.message,
-        data: result.data,
+        expired_cookies: result.data.expiredToken,
       });
     }
   } catch (error) {

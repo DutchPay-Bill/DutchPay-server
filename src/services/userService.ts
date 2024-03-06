@@ -96,10 +96,9 @@ const loginUserService = async ({ phone_number, password }: LoginInput) => {
 }
 
 // ------ Register by Google service ------
-const registerUserbyGoogleService = async (email: string, username: string) => {
+const registerUserbyGoogleService = async (fullname: string, email: string) => {
     try {
-        const createUser = await postCreateUserGoogle(email, username)
-
+        const createUser = await postCreateUserGoogle(fullname, email)
         return {
             success: true,
             message: "User registered successfully",
