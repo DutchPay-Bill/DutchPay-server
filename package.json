@@ -29,11 +29,7 @@
     "node": "^21.6.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "prisma": "^5.10.2",
-    "qrcode-terminal": "^0.12.0",
-    "redis": "^4.6.13",
-    "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8",
-    "wwebjs-mongo": "^1.1.0"
+    "prisma": "^5.10.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
