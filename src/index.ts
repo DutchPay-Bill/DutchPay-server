@@ -8,7 +8,7 @@ import middleWares from './middlewares';
 import router from './routes';
 import rootRoute from './routes/root';
 import { redisConnection } from './config/redis';
-import initializeWhatsappClient from './config/whatsapp/waServerAdmin';
+import passport from 'passport';
 
 // integration with .env
 dotenv.config();
@@ -16,7 +16,7 @@ const app = express()
 // DB connection
 db();
 // redis connection
-redisConnection()
+// redisConnection()
 // body parser
 app.use(express.json());
 // set cors accept client access
@@ -37,3 +37,4 @@ app.listen(server_port, ()=> {
 });
 // export app for vercel deployment
 export default app
+

@@ -1,49 +1,72 @@
-import qrcode from "qrcode-terminal";
-import { Client, LocalAuth, RemoteAuth } from "whatsapp-web.js";
+// import mongoose from "mongoose";
+// import qrcode from "qrcode-terminal";
+// import { Client, LocalAuth, RemoteAuth } from "whatsapp-web.js";
+// import { MongoStore } from "wwebjs-mongo";
 
-const client = new Client({
-    authStrategy: new LocalAuth(),
-    puppeteer: {
-      args: ['--no-sandbox']
-}
-});
+// let isAuthenticated = false;
+// let qrCode: any;
 
-let isAuthenticated = false;
-let qrCode : any;
+// const clientInit =mongoose.connect("mongodb+srv://rpbasukidev:revounextteam1@rpb.bo8sgbf.mongodb.net/test")
+//     .then(() => {
+//         const store = new MongoStore({
+//             mongoose: mongoose,
+//             collectionName: 'sessions',
+//             ttl: 30 * 24 * 60 * 60 // 30 days
+//         });
 
-client.initialize();
+//         const client = new Client({
+//             authStrategy: new RemoteAuth({
+//                 store: store,
+//                 backupSyncIntervalMs: 300000
+//             }),
+//             puppeteer: {
+//                 headless: true
+//             }
+//         });
 
-client.on('loading_screen', handleLoadingScreen);
-client.on('qr', handleQRCode);
-client.on('authenticated', handleAuthentication);
-client.on('auth_failure', handleAuthFailure);
-client.on('ready', handleReady);
+//         client.initialize();
 
-async function handleLoadingScreen(percent: any, message: any) {
-    console.log('LOADING SCREEN', percent, message);
-}
+//         // Set up client event listeners
+//         client.on('loading_screen', handleLoadingScreen);
+//         client.on('qr', handleQRCode);
+//         client.on('authenticated', handleAuthentication);
+//         client.on('auth_failure', handleAuthFailure);
+//         client.on('ready', handleReady);
+//         client.on('remote_session_saved', async () => {
+//             console.log('session saved')
+//         });
+//         return client
+//     })
+//     .catch(error => {
+//         console.error('Error connecting to MongoDB:', error);
+//     });
 
-function handleQRCode(qr: any) {
-    qrcode.generate(qr, { small: true });
-    qrCode = qr;
-}
+// // Your event handler functions here
 
-function handleAuthentication() {
-    console.log('AUTHENTICATED');
-    isAuthenticated = true;
-}
+// async function handleLoadingScreen(percent: any, message: any) {
+//     console.log('LOADING SCREEN', percent, message);
+// }
 
-function handleAuthFailure(msg: string) {
-    console.error('AUTHENTICATION FAILURE', msg);
-}
+// function handleQRCode(qr: any) {
+//     qrcode.generate(qr, { small: true });
+//     qrCode = qr;
+// }
 
-async function handleReady() {
-    console.log('READY');
-}
+// function handleAuthentication() {
+//     console.log('AUTHENTICATED');
+//     isAuthenticated = true;
+// }
 
+// function handleAuthFailure(msg: string) {
+//     console.error('AUTHENTICATION FAILURE', msg);
+// }
 
-const authenticated = () => isAuthenticated;  
-const getCode = () => qrCode;
-const waConnection = { client, authenticated, getCode}
+// async function handleReady() {
+//     console.log('READY');
+// }
 
-export default waConnection
+// const authenticated = () => isAuthenticated;
+// const getCode = () => qrCode;
+// const waConnection = { clientInit, authenticated, getCode };
+
+// export default waConnection;
