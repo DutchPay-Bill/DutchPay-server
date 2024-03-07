@@ -69,7 +69,7 @@ const userLogout = async (req: Request, res: Response) => {
 const updateUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
       const userId = (req.user as JwtPayload).id;
-      const updateData = req.body; // Assuming the request body contains the updated user profile fields
+      const updateData = req.body;
       const updatedUser = await updateUserProfileService(userId, updateData);
       
       res.status(200).json({
