@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getProfileService, loginUserService, registerUserbyPhoneService } from '../services/userService';
+import { getProfileService, loginUserService, registerUserbyPhoneService, updateUserProfileService } from '../services/userService';
 import { JwtPayload } from 'jsonwebtoken';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -66,4 +66,19 @@ const userLogout = async (req: Request, res: Response) => {
   })
 }
 
-export { getUserProfile, userRegisterbyPhone, userLogin, userLogout }
+const updateUserProfile = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+      const userId = (req.user as JwtPayload).id;
+      const updateData = req.body; // Assuming the request body contains the updated user profile fields
+      const updatedUser = await updateUserProfileService(userId, updateData);
+      
+      res.status(200).json({
+          success: true,
+          message: updatedUser,
+      });
+  } catch (error) {
+      next(error);
+  }
+}
+
+export { getUserProfile, userRegisterbyPhone, userLogin, userLogout, updateUserProfile }
