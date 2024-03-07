@@ -1,5 +1,5 @@
 import ErrorHandler from '../utils/errorHandler';
-import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone } from '../dao/userDao';
+import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone, updateUserProfile } from '../dao/userDao';
 import bcryptjs from "bcryptjs"
 import * as jwt from "jsonwebtoken"
 import { add } from "date-fns";
@@ -135,4 +135,35 @@ const registerUserbyGoogleService = async (fullname: string, email: string) => {
     }
 }
 
-export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService }
+const updateUserProfileService = async (id: number, updateData: any) => {
+    try {
+        const user = await getUserById(id);
+        if (!user) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'User Not Found.. Please login',
+                status: 404
+            });
+        }
+
+        const filteredUpdateData: any = {};
+        for (const key in updateData) {
+            if (updateData[key] !== undefined) {
+                filteredUpdateData[key] = updateData[key];
+            }
+        }
+
+        const updatedUser = await updateUserProfile(id, filteredUpdateData);
+        
+        return updatedUser;
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+}
+
+export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService, updateUserProfileService }
