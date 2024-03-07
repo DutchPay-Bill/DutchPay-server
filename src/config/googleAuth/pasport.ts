@@ -14,7 +14,7 @@ passport.use(
     {
       clientID: clientId!,
       clientSecret: clientSecret!,
-      callbackURL: `${api_url}/v1/user/auth/google/callback`,
+      callbackURL: `${api_url}/v1/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       const user = await getEmail(profile.emails?.[0].value as string);;

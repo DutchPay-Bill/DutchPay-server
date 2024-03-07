@@ -4,12 +4,13 @@ import { Application, Request } from "express";
 const origin = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://dutchpay-bill.web.app"
+    "https://dutchpay-bill.web.app",
+    "http://localhost:3000"
 ];
 
 const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
     const clientOrigin = origin.includes(req.header("Origin"));
-    const isPostman = req.header("User-Agent")?.includes("Postman");
+    const isPostman = req.header("User-Agent")?.includes("Postman","google");
     if (clientOrigin) {
         callback(null, {
             origin: true,
