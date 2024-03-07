@@ -22,10 +22,13 @@ const getPhone = async (phone_number : string )=> {
 
 const getEmail = async (email : string )=> {
     try {
-        const existEmail = await prisma.users.findUnique({
+        await prisma.users.findUnique({
             where: { email }
         });
-        return existEmail
+        const user = await prisma.users.findUnique({
+            where: {email: email}
+        })
+        return user?.id
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -38,10 +41,10 @@ const getEmail = async (email : string )=> {
     }
 }
 
-const postCreateUser = async (email : string, hashedPass: string )=> {
+const postCreateUserPhone = async (phone : string, password: string)=> {
     try {
         const newUser = await prisma.users.create({
-            data: { email: email, password: hashedPass }
+            data: { phone_number: phone, password: password }
         })
 
         return newUser
@@ -73,4 +76,45 @@ const getUserById = async (id: number) => {
     }
 }
 
-export { getEmail, postCreateUser, getPhone, getUserById }
+
+const postCreateUserGoogle = async (fullname: string, email : string)=> {
+    try {
+        await prisma.users.create({
+            data: {fullname: fullname, email: email }
+        })
+        const user = await prisma.users.findUnique({
+            where:{email: email} 
+        })
+
+        return {
+            userId: user?.id
+        }
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+const updateUserProfile = async (id: number, data: any) => {
+    try {
+        const updatedUser = await prisma.users.update({ where: { id }, data });
+        return updatedUser;
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: 500,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { getEmail, postCreateUserPhone, getPhone, getUserById, postCreateUserGoogle, updateUserProfile }

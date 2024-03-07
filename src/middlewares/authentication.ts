@@ -3,14 +3,7 @@ import jwt, {JwtPayload, Secret} from 'jsonwebtoken';
 import JWT_TOKEN from '../config/jwt/jwt';
 import ErrorHandler from '../utils/errorHandler';
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: JwtPayload;
-            role: string;
-        }
-    }
-}
+
 
 const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.access_token;
@@ -26,18 +19,17 @@ const authenticationMiddleware = (req: Request, res: Response, next: NextFunctio
         try {
             const decodedToken = jwt.verify(token, JWT_TOKEN as Secret) as JwtPayload;
             console.log("Decoded Token: ", decodedToken);
-            if ('role' in decodedToken) {
-                req.user = decodedToken;
-                req.role = decodedToken.role;
+            // if ('role' in decodedToken) {
+                req.user = decodedToken
                 next();
-            } else {
-                const error = new ErrorHandler({
-                    success: false,
-                    message: 'Unidentified Role...',
-                    status: 401
-                });
-                return next(error); 
-            }
+            // } else {
+            //     const error = new ErrorHandler({
+            //         success: false,
+            //         message: 'Unidentified Role...',
+            //         status: 401
+            //     });
+            //     return next(error); 
+            // }
         } catch (error) {
             const err = new ErrorHandler({
                 success: false,

@@ -1,27 +1,27 @@
 import express from 'express';
-import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { db } from './config/db/dbConnection';
 import errorCatch from './middlewares/errorCatch';
-import clientAccess from './middlewares/corsOption';
 import middleWares from './middlewares';
 import router from './routes';
 import rootRoute from './routes/root';
+import corsMiddleware from './middlewares/corsOption';
+import cors from 'cors';
 
 // integration with .env
 dotenv.config();
-
 const app = express()
 // DB connection
 db();
 // body parser
 app.use(express.json());
-// set cors accept client access
-app.use(cors(clientAccess))
 // server port
 const server_port = process.env.SERVER_PORT || 3001;
 // API root route
 app.use(rootRoute)
+// set cors accept client access
+// app.use(cors())
+corsMiddleware(app)
 // security middleware
 middleWares(app)
 // endpoint routes
@@ -34,3 +34,4 @@ app.listen(server_port, ()=> {
 });
 // export app for vercel deployment
 export default app
+

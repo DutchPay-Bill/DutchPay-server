@@ -1,12 +1,14 @@
-import bcryptjs from "bcryptjs";
 import ErrorHandler from '../utils/errorHandler';
-import { prisma } from '../config/db/dbConnection';
-import { getEmail, postCreateUser, getUserById, getPhone } from "../dao/userDao";
+import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone, updateUserProfile } from '../dao/userDao';
+import bcryptjs from "bcryptjs"
+import * as jwt from "jsonwebtoken"
+import { add } from "date-fns";
+import JWT_TOKEN from '../config/jwt/jwt';
 
 const getProfileService = async (id: number) => {
     try {
         const userProfile = await getUserById(id)
-        
+
         if (!userProfile) {
             throw new ErrorHandler({
                 success: false,
@@ -15,56 +17,54 @@ const getProfileService = async (id: number) => {
             });
         }
         return userProfile;
-    } catch (error) {
+    } catch (error: any) {
+        console.error(error);
         throw new ErrorHandler({
             success: false,
-            message: 'Error fetching user profile',
-            status: 500
+            status: error.status,
+            message: error.message,
         });
     }
 };
 
-//------ register ------
-const registerUserService = async ({ phone, email, password }: RegisterInput) => {
-    if (password.length < 6) {
-      throw new ErrorHandler({
-        success: false,
-        message: "Password must be at least 6 characters long",
-        status: 400,
-      });
-    }
-    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
-      throw new ErrorHandler({
-        success: false,
-        message: "Password must contain both alphabetic and numeric characters",
-        status: 400,
-      });
-    }
-    
+// ------ Register by Phone service ------
+const registerUserbyPhoneService = async (phone_number: string, password: string) => {
     try {
-        const userPhone = await getPhone(phone)
-        if (userPhone) {
-          throw new ErrorHandler({
-            success: false,
-            message: 'Phone Number already registered, please use other Phone Number',
-            status: 409,
-          });
-        }
-        const userEmail = await getEmail(email)
-        if (userEmail) {
+        if(!phone_number) {
             throw new ErrorHandler({
                 success: false,
-                message: 'Email already registered, please use other email',
+                message: 'Phone number cannot be empty',
+                status: 400
+            })
+        }
+        if (password.length < 6) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Password must be at least 6 characters long',
+                status: 400
+            })
+        }
+        if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Password must contain both alphabetic and numeric characters',
+                status: 400
+            })
+        }
+        const userPhone = await getPhone(phone_number)
+        if (userPhone) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Phone Number already registered, please use other Phone Number',
                 status: 409,
             });
         }
-
-        const hashedPass = await bcryptjs.hash(password, 10);
-        const createUser = await postCreateUser(email, hashedPass)
+        const hashedPassword = await bcryptjs.hash(password, 10);
+        const createUser = await postCreateUserPhone(phone_number, hashedPassword)
 
         return {
             success: true,
-            message: "Successfully creating user",
+            message: "User registered successfully",
             data: createUser
         }
     } catch (error: any) {
@@ -78,4 +78,92 @@ const registerUserService = async ({ phone, email, password }: RegisterInput) =>
 }
 
 
-export { getProfileService, registerUserService }
+const loginUserService = async ({ phone_number, password }: LoginInput) => {
+    try {  
+        const user = await getPhone(phone_number)
+        if (!user) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'User not found',
+                status: 404,
+            });
+        }
+        const isPasswordValid = await bcryptjs.compare(password, user.password || '');
+        if (!isPasswordValid) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Incorrect password',
+                status: 401,
+            });
+        }        
+        const currentDate = new Date()
+        const expiredToken = add(currentDate, { weeks: 1 });
+        const accessToken = jwt.sign(
+            { id: user.id }, JWT_TOKEN!, {expiresIn: '7d'}
+        );
+        return {
+            success: true,
+            message: 'User logged in successfully.',
+            data: { accessToken, expiredToken },
+        };
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            message: error.message,
+            status: error.status || 500,
+        });
+    }
+}
+
+// ------ Register by Google service ------
+const registerUserbyGoogleService = async (fullname: string, email: string) => {
+    try {
+        const createUser = await postCreateUserGoogle(fullname, email)
+        return {
+            success: true,
+            message: "User registered successfully",
+            data: createUser
+        }
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+}
+
+const updateUserProfileService = async (id: number, updateData: any) => {
+    try {
+        const user = await getUserById(id);
+        if (!user) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'User Not Found.. Please login',
+                status: 404
+            });
+        }
+
+        const filteredUpdateData: any = {};
+        for (const key in updateData) {
+            if (updateData[key] !== undefined) {
+                filteredUpdateData[key] = updateData[key];
+            }
+        }
+
+        const updatedUser = await updateUserProfile(id, filteredUpdateData);
+        
+        return updatedUser;
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+}
+
+export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService, updateUserProfileService }
