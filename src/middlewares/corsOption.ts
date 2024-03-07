@@ -12,9 +12,8 @@ const origin = [
 const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
     const clientOrigin = origin.includes(req.header("Origin"));
     const isPostman = req.header("User-Agent")?.includes("Postman","google");
-    const isGoogle = req.header("User-Agent")?.includes("Chrome");
-    const isAuthGoogleRoute = req.path === `${api_url}/v1/auth/google`;
-    if ((clientOrigin && isAuthGoogleRoute) || isGoogle) { 
+    const isAuthGoogleRoute = req.path === `${api_url}/v1/auth/google/*`;
+    if (clientOrigin || isAuthGoogleRoute) { 
         callback(null, {
             origin: true,
             methods: 'GET, POST, DELETE, PUT, OPTIONS, HEAD',

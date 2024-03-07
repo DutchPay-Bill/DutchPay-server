@@ -1,5 +1,4 @@
-import ErrorHandler from '../utils/errorHandler';
-import { getPayment, postPayment } from '../dao/paymentDao';
+import { postPayment } from '../dao/paymentDao';
 
 async function createPaymentService(user_id: number, card_number: number, card_name: string, payment_method_id: number) {
     try {
