@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createFriendsOrderService } from '../services/friendOrderService';
+import { createFriendsOrderService, updateFriendOrderStatusService } from '../services/friendOrderService';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createFriendsOrder = async (req:Request, res: Response, next: NextFunction) => {
@@ -17,4 +17,18 @@ const createFriendsOrder = async (req:Request, res: Response, next: NextFunction
     }
 }
 
-export { createFriendsOrder }
+const updateFriendOrderStatus = async (req:Request, res: Response, next: NextFunction) => {
+    try {
+        const { friend_id, status } = req.body
+        const newFriendsOrder = await updateFriendOrderStatusService(friend_id, status)
+
+        res.status(200).json({
+            success: true,
+            message: newFriendsOrder,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export { createFriendsOrder, updateFriendOrderStatus }

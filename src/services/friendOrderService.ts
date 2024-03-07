@@ -1,7 +1,8 @@
 import ErrorHandler from '../utils/errorHandler';
 import { getFriendById } from '../dao/friendDao';
 import { getOrderById } from '../dao/orderDao';
-import { createFriendsOrder } from '../dao/friendsOrderDao';
+import { createFriendsOrder, getFriendOrdersByFriendId, updateFriendsOrderStatus } from '../dao/friendsOrderDao';
+import { Order_status_Enum } from '../../prisma/generated/client';
 
 const createFriendsOrderService = async (userId: number, orderId: number, friendsIds: number[], price: number) => {
     try {
@@ -41,4 +42,35 @@ const createFriendsOrderService = async (userId: number, orderId: number, friend
     }
 };
 
-export { createFriendsOrderService }
+const updateFriendOrderStatusService = async (friendId: number, status: Order_status_Enum) => {
+    try {
+        const friendsOrders = await getFriendOrdersByFriendId(friendId);
+        if (!friendsOrders) {
+            throw new ErrorHandler({
+                success: false,
+                message: `Friend with ID ${friendId} doesn't have any order..`,
+                status: 404
+            });
+        }
+
+        if (!(status in Order_status_Enum)) {
+            throw new ErrorHandler({
+                success: false,
+                message: "Invalid Status",
+                status: 404
+            });
+        }
+
+        const updateFriendOrderStatus = await updateFriendsOrderStatus(friendId, status)
+        return updateFriendOrderStatus
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+}
+
+export { createFriendsOrderService, updateFriendOrderStatusService }

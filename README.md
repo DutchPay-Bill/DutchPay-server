@@ -29,4 +29,11 @@ POST/Create New
     "price": 10000
 }
 ```
+PUT/Update Status (Paid/Unpaid):
+```JSON
+{
+    "friends_id": 1,
+    "status": "paid"
+}
+```
 <br>
