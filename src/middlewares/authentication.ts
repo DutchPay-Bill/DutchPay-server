@@ -19,16 +19,17 @@ const authenticationMiddleware = (req: Request, res: Response, next: NextFunctio
         try {
             const decodedToken = jwt.verify(token, JWT_TOKEN as Secret) as JwtPayload;
             console.log("Decoded Token: ", decodedToken);
-            if ('role' in decodedToken) {
+            // if ('role' in decodedToken) {
+                req.user = decodedToken
                 next();
-            } else {
-                const error = new ErrorHandler({
-                    success: false,
-                    message: 'Unidentified Role...',
-                    status: 401
-                });
-                return next(error); 
-            }
+            // } else {
+            //     const error = new ErrorHandler({
+            //         success: false,
+            //         message: 'Unidentified Role...',
+            //         status: 401
+            //     });
+            //     return next(error); 
+            // }
         } catch (error) {
             const err = new ErrorHandler({
                 success: false,
