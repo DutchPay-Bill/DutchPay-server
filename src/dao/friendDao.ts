@@ -20,7 +20,7 @@ const createFriend = async (name : string)=> {
     }
 }
 
-const getFriend = async (userId: number, name : string)=> {
+const getFriendByName = async (userId: number, name : string)=> {
     try {
         const searchFriend = await prisma.friends.findFirst({
             where:{user_id: userId, friends_name: name} 
@@ -39,4 +39,23 @@ const getFriend = async (userId: number, name : string)=> {
     }
 }
 
-export { createFriend, getFriend }
+const getFriendById = async (userId: number, friendId: number)=> {
+    try {
+        const searchFriendById = await prisma.friends.findFirst({
+            where:{user_id: userId, id: friendId} 
+        })
+
+        return searchFriendById
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { createFriend, getFriendByName, getFriendById }
