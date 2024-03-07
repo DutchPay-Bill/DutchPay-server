@@ -12,7 +12,7 @@ const origin = [
 const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
     const clientOrigin = origin.includes(req.header("Origin"));
     const isPostman = req.header("User-Agent")?.includes("Postman","google");
-    const isAuthGoogleRoute = req.path === '/v1/auth/google/*';
+    const isAuthGoogleRoute = req.path === '/auth/google/callback';
     if (clientOrigin || isAuthGoogleRoute) { 
         callback(null, {
             origin: true,
