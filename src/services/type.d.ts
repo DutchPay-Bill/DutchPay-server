@@ -4,6 +4,6 @@ interface RegisterInput {
 }
 
 interface LoginInput{
-    username: string,
+    phone_number: string,
     password: string
 }

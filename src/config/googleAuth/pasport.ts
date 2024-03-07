@@ -14,13 +14,12 @@ passport.use(
     {
       clientID: clientId!,
       clientSecret: clientSecret!,
-      callbackURL: `${api_url}/v1/user/auth/google/callback`,
+      callbackURL: `${api_url}/v1/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       const user = await getEmail(profile.emails?.[0].value as string);;
 
       try {
-        // If user doesn't exist creates a new user. (similar to sign up)
         if (!user) {
           const newUser = await registerUserbyGoogleService(profile.displayName, profile.emails?.[0].value as string);
           if (newUser) {
