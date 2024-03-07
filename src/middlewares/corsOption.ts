@@ -1,6 +1,5 @@
 import cors, { CorsOptions } from "cors";
 import { Application, Request } from "express";
-import { api_url } from "../utils/url";
 
 const origin = [
     "http://localhost:5173",
@@ -12,8 +11,7 @@ const origin = [
 const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
     const clientOrigin = origin.includes(req.header("Origin"));
     const isPostman = req.header("User-Agent")?.includes("Postman","google");
-    const isAuthGoogleRoute = req.path === '/auth/google/callback';
-    if (clientOrigin || isAuthGoogleRoute) { 
+    if (clientOrigin) {
         callback(null, {
             origin: true,
             methods: 'GET, POST, DELETE, PUT, OPTIONS, HEAD',
