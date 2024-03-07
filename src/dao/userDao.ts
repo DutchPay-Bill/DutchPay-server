@@ -101,4 +101,20 @@ const postCreateUserGoogle = async (fullname: string, email : string)=> {
     }
 }
 
-export { getEmail, postCreateUserPhone, getPhone, getUserById, postCreateUserGoogle }
+const updateUserProfile = async (id: number, data: any) => {
+    try {
+        const updatedUser = await prisma.users.update({ where: { id }, data });
+        return updatedUser;
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: 500,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { getEmail, postCreateUserPhone, getPhone, getUserById, postCreateUserGoogle, updateUserProfile }

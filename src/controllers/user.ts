@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getProfileService, loginUserService, registerUserbyPhoneService } from '../services/userService';
+import { getProfileService, loginUserService, registerUserbyPhoneService, updateUserProfileService } from '../services/userService';
 import { JwtPayload } from 'jsonwebtoken';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -58,5 +58,27 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
  
+const userLogout = async (req: Request, res: Response) => {
+  res.clearCookie('access_token');
+  res.status(200).json({
+    success: true,
+    message: "See you next time..!",
+  })
+}
 
-export { getUserProfile, userRegisterbyPhone, userLogin }
+const updateUserProfile = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+      const userId = (req.user as JwtPayload).id;
+      const updateData = req.body;
+      const updatedUser = await updateUserProfileService(userId, updateData);
+      
+      res.status(200).json({
+          success: true,
+          message: updatedUser,
+      });
+  } catch (error) {
+      next(error);
+  }
+}
+
+export { getUserProfile, userRegisterbyPhone, userLogin, userLogout, updateUserProfile }
