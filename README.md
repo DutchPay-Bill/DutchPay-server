@@ -3,6 +3,7 @@
 ## API Request Body Example (Postman testing)
 
 **Users:**
+<br>
 PATCH/Update Profile (1 data):
 ```JSON
 {
@@ -19,12 +20,20 @@ PATCH/Update Profile (more than data):
 <br>
 
 **Friends Order:**
+<br>
 POST/Create New
 ```JSON
 {
     "orders_id": 1,
     "friends_ids": [1, 2, 3],
     "price": 10000
+}
+```
+PUT/Update Status (Paid/Unpaid):
+```JSON
+{
+    "friends_id": 1,
+    "status": "paid"
 }
 ```
 <br>
