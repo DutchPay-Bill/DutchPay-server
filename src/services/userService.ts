@@ -28,9 +28,30 @@ const getProfileService = async (id: number) => {
 };
 
 // ------ Register by Phone service ------
-const registerUserbyPhoneService = async (phone: string) => {
+const registerUserbyPhoneService = async (phone_number: string, password: string) => {
     try {
-        const userPhone = await getPhone(phone)
+        if(!phone_number) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Phone number cannot be empty',
+                status: 400
+            })
+        }
+        if (password.length < 6) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Password must be at least 6 characters long',
+                status: 400
+            })
+        }
+        if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Password must contain both alphabetic and numeric characters',
+                status: 400
+            })
+        }
+        const userPhone = await getPhone(phone_number)
         if (userPhone) {
             throw new ErrorHandler({
                 success: false,
@@ -38,8 +59,8 @@ const registerUserbyPhoneService = async (phone: string) => {
                 status: 409,
             });
         }
-
-        const createUser = await postCreateUserPhone(phone)
+        const hashedPassword = await bcryptjs.hash(password, 10);
+        const createUser = await postCreateUserPhone(phone_number, hashedPassword)
 
         return {
             success: true,

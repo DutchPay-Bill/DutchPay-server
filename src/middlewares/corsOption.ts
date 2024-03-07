@@ -1,12 +1,34 @@
-import { CorsOptions } from 'cors';
-import * as dotenv from 'dotenv';
+import cors, { CorsOptions } from "cors";
+import { Application, Request } from "express";
 
-dotenv.config()
+const origin = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://milestone3-rpb.web.app"
+];
 
-const clientAccess: CorsOptions = {
-        origin: ['http://locahost:5173', 'https://dutchpay-bill.web.app'],
-        methods: ['GET', 'POST', 'PUT', 'DELETE']
+const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
+    const clientOrigin = origin.includes(req.header("Origin"));
+    const isPostman = req.header("User-Agent")?.includes("Postman");
+    if (clientOrigin) {
+        callback(null, {
+            origin: true,
+            methods: 'GET, POST, DELETE, PUT, OPTIONS, HEAD',
+            credentials: true
+        });
+    } else if (isPostman) {
+        callback(null, {
+            origin: 'https://www.getpostman.com',
+            methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+            credentials: true
+        });
+    } else {
+        callback(new Error('Not allowed by CORS'));
     }
+};
 
+const corsMiddleware = (app: Application) => {
+    app.use(cors(corsOptions));
+};
 
-export default clientAccess
+export default corsMiddleware;

@@ -1,13 +1,11 @@
 import express from 'express';
-import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { db } from './config/db/dbConnection';
 import errorCatch from './middlewares/errorCatch';
-import clientAccess from './middlewares/corsOption';
 import middleWares from './middlewares';
 import router from './routes';
 import rootRoute from './routes/root';
-import passport from 'passport';
+import corsMiddleware from './middlewares/corsOption';
 
 // integration with .env
 dotenv.config();
@@ -16,12 +14,12 @@ const app = express()
 db();
 // body parser
 app.use(express.json());
-// set cors accept client access
-app.use(cors(clientAccess))
 // server port
 const server_port = process.env.SERVER_PORT || 3001;
 // API root route
 app.use(rootRoute)
+// set cors accept client access
+corsMiddleware(app)
 // security middleware
 middleWares(app)
 // endpoint routes

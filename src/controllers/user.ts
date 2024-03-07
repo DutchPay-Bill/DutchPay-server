@@ -19,8 +19,8 @@ const getUserProfile = async (req: Request, res: Response, next: NextFunction) =
 //------ Create user by phone ------
 const userRegisterbyPhone = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { phone } = req.body;
-    const result = await registerUserbyPhoneService(phone)
+    const { phone_number, password } = req.body;
+    const result = await registerUserbyPhoneService(phone_number, password)
     if (result.success) {
       res.status(200).json({
         success: true,
@@ -42,7 +42,9 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       const oneWeekInSeconds = 7 * 24 * 3600;
       res.cookie("access_token", result.data.accessToken, {
         maxAge: oneWeekInSeconds * 1000,
-        httpOnly: true,
+        httpOnly: false,
+        secure: true,
+        sameSite: 'none',
         path: '/'
       });
       return res.status(200).json({

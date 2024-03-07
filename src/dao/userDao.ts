@@ -1,7 +1,5 @@
-import e from "express";
 import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
-import { use } from "passport";
 
 
 const getPhone = async (phone_number : string )=> {
@@ -43,10 +41,10 @@ const getEmail = async (email : string )=> {
     }
 }
 
-const postCreateUserPhone = async (phone : string)=> {
+const postCreateUserPhone = async (phone : string, password: string)=> {
     try {
         const newUser = await prisma.users.create({
-            data: { phone_number: phone }
+            data: { phone_number: phone, password: password }
         })
 
         return newUser
