@@ -1,4 +1,5 @@
 import express from 'express';
+import authRouter from './v1/auth';
 
 const rootRoute = express.Router()
 
@@ -8,5 +9,7 @@ rootRoute.get('/', (req, res) => {
         message: "Welcome to DutchPay API"
     })
 })
+
+// rootRoute.use('/v1/auth', authRouter)
 
 export default rootRoute
