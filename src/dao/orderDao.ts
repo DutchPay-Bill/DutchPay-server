@@ -1,13 +1,13 @@
-import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
+import { prisma } from "../config/db/dbConnection";
 
 const getOrderById = async (orderId: number) => {
     try {
         const searchOrder = await prisma.orders.findUnique({
-            where:{id: orderId} 
-        })
+            where: { id: orderId }
+        });
 
-        return searchOrder
+        return searchOrder;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -15,10 +15,8 @@ const getOrderById = async (orderId: number) => {
             status: error.status,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
-}
+};
 
 const getAllOrders = async () => {
     try {
@@ -31,12 +29,9 @@ const getAllOrders = async () => {
             status: error.status || 500,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
-// Add Order
 const createOrder = async (userId: number, menuName: string, qty: number, price: bigint) => {
     try {
         const newOrder = await prisma.orders.create({
@@ -55,12 +50,9 @@ const createOrder = async (userId: number, menuName: string, qty: number, price:
             status: error.status || 500,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
-// Delete Order
 const deleteOrder = async (orderId: number) => {
     try {
         const deletedOrder = await prisma.orders.delete({
@@ -76,12 +68,9 @@ const deleteOrder = async (orderId: number) => {
             status: error.status || 500,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
-// Edit Order
 const updateOrder = async (orderId: number, newMenuName: string, newQty: number, newPrice: bigint) => {
     try {
         const updatedOrder = await prisma.orders.update({
@@ -102,8 +91,6 @@ const updateOrder = async (orderId: number, newMenuName: string, newQty: number,
             status: error.status,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
