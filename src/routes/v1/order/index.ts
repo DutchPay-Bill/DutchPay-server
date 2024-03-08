@@ -3,10 +3,10 @@ import { createOrder, getOrderById, getAllOrders, deleteOrder, updateOrder } fro
 
 const orderRouter = express.Router()
 
-orderRouter.get('/', getOrderById)
+orderRouter.get('/:orderId', getOrderById)
 orderRouter.get('/', getAllOrders)
 orderRouter.post('/', createOrder)
-orderRouter.put('/', updateOrder)
-orderRouter.delete('/', deleteOrder)
+orderRouter.put('/:orderId', updateOrder)
+orderRouter.delete('/:orderId', deleteOrder)
 
 export default orderRouter;
