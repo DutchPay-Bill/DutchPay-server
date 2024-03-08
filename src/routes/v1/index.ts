@@ -15,6 +15,7 @@ v1Router.use('/user', authenticationMiddleware, userRouter);
 v1Router.use('/friend', authenticationMiddleware, friendRouter);
 v1Router.use('/orders', authenticationMiddleware, orderRouter);
 v1Router.use('/friends-order', authenticationMiddleware, friendsOrderRouter);
+v1Router.use('/orders', authenticationMiddleware, orderRouter);
 v1Router.use('/bill', authenticationMiddleware, billRouter);
 
 export default v1Router
