@@ -28,7 +28,7 @@ authRouter.get('/google/callback', passport.authenticate('google', { session: fa
         maxAge: oneWeekInSeconds * 1000,
         httpOnly: false,
         secure: true,
-        sameSite: 'none',
+        sameSite: 'strict',
         path: '/'
     });
     res.redirect(`${client_url}/google-auth/success`)
