@@ -2,9 +2,9 @@ import express from 'express';
 import { checkPhoneAvailability, userLogin, userLogout, userRegisterbyPhone } from '../../../controllers/user';
 import passport from 'passport';
 import JWT_TOKEN from '../../../config/jwt/jwt';
-import jwt from "jsonwebtoken"
-import { add } from 'date-fns';
+import jwt from "jsonwebtoken";
 import { client_url } from '../../../utils/url';
+import cors from 'cors';
 
 const authRouter = express.Router()
 
@@ -15,7 +15,7 @@ authRouter.post('/register', userRegisterbyPhone)
 
 // google auth
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-authRouter.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+authRouter.get('/google/callback', cors({origin: "*"}), passport.authenticate('google', { session: false }), (req, res) => {
     if (!req.user) {
         res.redirect(`${client_url}/google-auth/failed`)
     }

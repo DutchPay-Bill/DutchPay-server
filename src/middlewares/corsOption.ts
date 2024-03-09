@@ -12,7 +12,7 @@ const origin = [
 
 const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
     const clientOrigin = origin.includes(req.header("Origin"));
-    const isPostman = req.header("User-Agent")?.includes("Postman","google");
+    const isPostman = req.header("User-Agent")?.includes("Postman");
     if (clientOrigin) {
         callback(null, {
             origin: true,
