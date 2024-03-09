@@ -43,9 +43,9 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       res.cookie("access_token", result.data.accessToken, {
         maxAge: oneWeekInSeconds * 1000,
         httpOnly: false,
-        secure: false,
+        secure: true,
         sameSite: 'none',
-        path: '/'
+        path: '/*',
       });
       return res.status(200).json({
         success: true,
