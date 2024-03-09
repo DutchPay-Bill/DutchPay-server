@@ -23,7 +23,7 @@ const corsOptions = (req: Request | any, callback: (err: Error | null, options?:
         callback(null, {
             origin: 'https://www.getpostman.com',
             methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
-            credentials: true
+            credentials: true,
         });
     } else {
         callback(new Error('Not allowed by CORS'));

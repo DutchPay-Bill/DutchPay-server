@@ -44,7 +44,7 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
         maxAge: oneWeekInSeconds * 1000,
         httpOnly: false,
         secure: true,
-        sameSite: 'none',
+        sameSite: 'lax',
         path: '/'
       });
       return res.status(200).json({
