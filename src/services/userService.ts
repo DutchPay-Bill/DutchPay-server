@@ -27,6 +27,32 @@ const getProfileService = async (id: number) => {
     }
 };
 
+// ------ check Registered Phone service ------
+const checkRegisteredPhoneService = async (phone_number: string) => {
+    try {
+        const userPhone = await getPhone(phone_number)
+        if (userPhone) {
+            throw new ErrorHandler({
+                success: false,
+                message: 'Phone Number already registered, please use other Phone Number',
+                status: 409,
+            });
+        }
+        return {
+            success: true,
+            message: "Phone Number is available to register",
+            data: userPhone
+        }
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+}
+
 // ------ Register by Phone service ------
 const registerUserbyPhoneService = async (phone_number: string, password: string) => {
     try {
@@ -166,4 +192,4 @@ const updateUserProfileService = async (id: number, updateData: any) => {
     }
 }
 
-export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService, updateUserProfileService }
+export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService, updateUserProfileService, checkRegisteredPhoneService }

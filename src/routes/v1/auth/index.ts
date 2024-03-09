@@ -1,5 +1,5 @@
 import express from 'express';
-import { userLogin, userLogout, userRegisterbyPhone } from '../../../controllers/user';
+import { checkPhoneAvailability, userLogin, userLogout, userRegisterbyPhone } from '../../../controllers/user';
 import passport from 'passport';
 import JWT_TOKEN from '../../../config/jwt/jwt';
 import jwt from "jsonwebtoken"
@@ -10,7 +10,7 @@ const authRouter = express.Router()
 
 authRouter.post('/login', userLogin)
 authRouter.post('/logout', userLogout)
-
+authRouter.post('/check-number', checkPhoneAvailability)
 authRouter.post('/register', userRegisterbyPhone)
 
 // google auth
