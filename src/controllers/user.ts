@@ -35,8 +35,8 @@ const checkPhoneAvailability = async (req: Request, res: Response, next: NextFun
 //------ Create user by phone ------
 const userRegisterbyPhone = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { phone_number, password } = req.body;
-    const result = await registerUserbyPhoneService(phone_number, password)
+    const { fullname, phone_number, password } = req.body;
+    const result = await registerUserbyPhoneService(fullname, phone_number, password)
     if (result.success) {
       res.status(200).json({
         success: true,

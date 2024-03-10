@@ -54,7 +54,7 @@ const checkRegisteredPhoneService = async (phone_number: string) => {
 }
 
 // ------ Register by Phone service ------
-const registerUserbyPhoneService = async (phone_number: string, password: string) => {
+const registerUserbyPhoneService = async (fullname: string, phone_number: string, password: string) => {
     try {
         if(!phone_number) {
             throw new ErrorHandler({
@@ -86,7 +86,7 @@ const registerUserbyPhoneService = async (phone_number: string, password: string
             });
         }
         const hashedPassword = await bcryptjs.hash(password, 10);
-        const createUser = await postCreateUserPhone(phone_number, hashedPassword)
+        const createUser = await postCreateUserPhone(fullname, phone_number, hashedPassword)
 
         return {
             success: true,
