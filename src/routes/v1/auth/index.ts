@@ -1,21 +1,21 @@
 import express from 'express';
-import { userLogin, userLogout, userRegisterbyPhone } from '../../../controllers/user';
+import { checkPhoneAvailability, userLogin, userLogout, userRegisterbyPhone } from '../../../controllers/user';
 import passport from 'passport';
 import JWT_TOKEN from '../../../config/jwt/jwt';
-import jwt from "jsonwebtoken"
-import { add } from 'date-fns';
+import jwt from "jsonwebtoken";
 import { client_url } from '../../../utils/url';
+import cors from 'cors';
 
 const authRouter = express.Router()
 
 authRouter.post('/login', userLogin)
 authRouter.post('/logout', userLogout)
-
+authRouter.post('/check-number', checkPhoneAvailability)
 authRouter.post('/register', userRegisterbyPhone)
 
 // google auth
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-authRouter.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+authRouter.get('/google/callback', cors({origin: "*"}), passport.authenticate('google', { session: false }), (req, res) => {
     if (!req.user) {
         res.redirect(`${client_url}/google-auth/failed`)
     }
@@ -28,7 +28,7 @@ authRouter.get('/google/callback', passport.authenticate('google', { session: fa
         maxAge: oneWeekInSeconds * 1000,
         httpOnly: false,
         secure: true,
-        sameSite: 'none',
+        sameSite: 'strict',
         path: '/'
     });
     res.redirect(`${client_url}/google-auth/success`)

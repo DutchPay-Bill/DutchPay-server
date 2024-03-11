@@ -10,6 +10,6 @@ rootRoute.get('/', (req, res) => {
     })
 })
 
-// rootRoute.use('/v1/auth', authRouter)
+rootRoute.use('/v1/auth', authRouter)
 
 export default rootRoute

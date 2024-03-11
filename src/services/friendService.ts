@@ -4,6 +4,7 @@ import { createFriend, getFriendByName } from '../dao/friendDao';
 
 const addFriendService = async (userId: number, name: string) => {
     try {
+      console.log('user id ',userId )
         const user = await getUserById(userId)
         if (!user) {
             throw new ErrorHandler({
@@ -14,7 +15,7 @@ const addFriendService = async (userId: number, name: string) => {
         }
         const checkFriendName = await getFriendByName(userId, name)
         if (!checkFriendName) {
-            const newFriend = await createFriend(name)
+            const newFriend = await createFriend(userId, name,)
             return newFriend
         } else {
             throw new ErrorHandler({
