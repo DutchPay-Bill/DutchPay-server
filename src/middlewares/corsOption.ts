@@ -16,13 +16,13 @@ const corsOptions = (req: Request | any, callback: (err: Error | null, options?:
     if (clientOrigin) {
         callback(null, {
             origin: true,
-            methods: 'GET, POST, DELETE, PUT, OPTIONS, HEAD',
+            methods: 'GET, POST, DELETE, PUT, PATCH, OPTIONS, HEAD',
             credentials: true
         });
     } else if (isPostman) {
         callback(null, {
             origin: 'https://www.getpostman.com',
-            methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+            methods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD',
             credentials: true,
         });
     } else {
