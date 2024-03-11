@@ -37,3 +37,14 @@ PUT/Update Status (Paid/Unpaid):
 }
 ```
 <br>
+
+**New Payment:**
+<br>
+```
+{
+    "card_number": 1233420123456743,
+    "card_name":"test1235678",
+    "payment_method_id": 1
+}
+```
+<br>
