@@ -5,6 +5,7 @@ import friendRouter from './friend';
 import friendsOrderRouter from './friendsOrder';
 import orderRouter from './order';
 import billRouter from './bill';
+import paymentRouter from './payment';
 import { authenticate } from 'passport';
 import authenticationMiddleware from '../../middlewares/authentication';
 
@@ -15,5 +16,6 @@ v1Router.use('/friend', authenticationMiddleware, friendRouter);
 v1Router.use('/friends-order', authenticationMiddleware, friendsOrderRouter);
 v1Router.use('/orders', authenticationMiddleware, orderRouter);
 v1Router.use('/bill', authenticationMiddleware, billRouter);
+v1Router.use('/payment', authenticationMiddleware, paymentRouter);
 
 export default v1Router
