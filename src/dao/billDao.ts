@@ -1,9 +1,9 @@
 import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
 
-const getBillById = async (user_id: number, bill_id: number) => {
+const getBillById = async (userId: number, billId: number) => {
     try {
-        const getOneBill = await prisma.bill.findUnique({where: {id: bill_id, user_id: user_id}})
+        const getOneBill = await prisma.bill.findUnique({where: {id: billId, user_id: userId}})
 
         return getOneBill
     } catch (error: any) {
@@ -18,9 +18,9 @@ const getBillById = async (user_id: number, bill_id: number) => {
     }
 }
 
-const getAllBillByUserId = async (user_id: number) => {
+const getAllBillByUserId = async (userId: number) => {
     try {
-        const getAllBill = await prisma.bill.findMany({where: {user_id: user_id}})
+        const getAllBill = await prisma.bill.findMany({where: {user_id: userId}})
 
         return getAllBill
     } catch (error: any) {
@@ -35,37 +35,18 @@ const getAllBillByUserId = async (user_id: number) => {
     }
 }
 
-const getBillIdByOrderId = async(order_id: number) => {
-    try {
-        const order = await prisma.orders.findUnique({where: {id: order_id}})
-        if (order) {
-            return order.bill_id;
-        }
-    } catch (error: any) {
-        console.error(error);
-        throw new ErrorHandler({
-            success: false,
-            status: error.status,
-            message: error.message,
-        });
-    } finally {
-        await disconnectDB();
-    }
-}
-
-const createBill = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, totalPrice: bigint, date: Date) => {
+const createBill = async (userId: number, description: string, paymentMethodId: number, discount: number | null, tax: number, service: number | null, totalPrice: number) => {
     try {
         const newBill = await prisma.bill.create({
             data: {
-                users: { connect: { id: user_id } },
+                users: { connect: { id: userId } },
                 description,
-                payment_method_details: { connect: { id: payment_method_id } },
+                payment_method_details: { connect: { id: paymentMethodId } },
                 discount,
                 tax,
                 service,
                 total_price: totalPrice,
-                is_completed: false,
-                date,
+                status: "ongoing"
             }
         });
         return newBill;
@@ -81,23 +62,4 @@ const createBill = async (user_id: number, description: string, payment_method_i
     }
 }
 
-const updateBillStatus = async (bill_id: number, is_completed: boolean) => {
-    try {
-        const updateBillStatus = await prisma.bill.update({
-            where: { id: bill_id },
-            data: { is_completed: is_completed }
-        });
-        return updateBillStatus
-    } catch (error: any) {
-        console.error(error);
-        throw new ErrorHandler({
-            success: false,
-            status: error.status,
-            message: error.message,
-        });
-    } finally {
-        await disconnectDB();
-    }
-}
-
-export { getBillById, getAllBillByUserId, getBillIdByOrderId, createBill, updateBillStatus };
+export { getBillById, getAllBillByUserId, createBill };

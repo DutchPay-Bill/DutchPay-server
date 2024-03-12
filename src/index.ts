@@ -17,10 +17,10 @@ db();
 app.use(express.json());
 // server port
 const server_port = process.env.SERVER_PORT || 3001;
-// set cors accept client access
-corsMiddleware(app)
 // API root route
 app.use(rootRoute)
+// set cors accept client access
+corsMiddleware(app)
 // security middleware
 middleWares(app)
 // endpoint routes

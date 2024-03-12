@@ -4,6 +4,6 @@ import { createFriendsOrder, updateFriendOrderStatus } from '../../../controller
 const friendsOrderRouter = express.Router()
 
 friendsOrderRouter.post('/', createFriendsOrder)
-friendsOrderRouter.put('/:friend_id', updateFriendOrderStatus)
+friendsOrderRouter.put('/', updateFriendOrderStatus)
 
 export default friendsOrderRouter;
