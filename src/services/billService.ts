@@ -5,9 +5,9 @@ import { createFriendsOrderService } from './friendOrderService';
 import { createOrderService } from './orderService';
 import { getFriendsOrdersByBillId } from '../dao/friendsOrderDao';
 
-const getOneBillService = async (userId: number, billId: number) => {
+const getOneBillService = async (user_id: number, bill_id: number) => {
     try {
-        const checkBill = await getBillById(userId, billId);
+        const checkBill = await getBillById(user_id, bill_id);
         if (!checkBill) {
             throw new ErrorHandler({
                 success: false,
@@ -26,9 +26,9 @@ const getOneBillService = async (userId: number, billId: number) => {
     }
 };
 
-const getAllBillByUserService = async (userId: number) => {
+const getAllBillByUserService = async (user_id: number) => {
     try {
-        const getListBill = await getAllBillByUserId(userId);
+        const getListBill = await getAllBillByUserId(user_id);
         if (getListBill.length === 0) {
             return {
                 success: true,
@@ -54,9 +54,9 @@ const getAllBillByUserService = async (userId: number) => {
     }
 };
 
-const addBillService = async (userId: number, description: string, paymentMethodId: number, discount: number | null, tax: number, service: number | null, orderDetails: { menuName: string; qty: number; price: bigint, friendIds: number[] }[], ) => {
+const addBillService = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, orderDetails: { menu_name: string; qty: number; price: bigint, friends_id: number[] }[], ) => {
     try {
-        if (!userId ) {
+        if (!user_id ) {
             throw new ErrorHandler({
                 success: false,
                 message: `User Not Found...`,
@@ -64,7 +64,7 @@ const addBillService = async (userId: number, description: string, paymentMethod
             });
         }
 
-        if (!description || !paymentMethodId || !tax || !orderDetails) {
+        if (!description || !payment_method_id || !tax || !orderDetails) {
             throw new ErrorHandler({
                 success: false,
                 message: `Description/ Payment Method/ Order details / Friends / Tax Missing...`,
@@ -73,8 +73,8 @@ const addBillService = async (userId: number, description: string, paymentMethod
         }
         // Create friends orders
         const newOrdersAndFriendsOrders = await Promise.all(orderDetails.map(async orderDetail => {
-            const order = await createOrderService(userId, orderDetail.menuName, orderDetail.qty, orderDetail.price);
-            await createFriendsOrderService(userId, order.menu_name, order.qty, order.price, orderDetail.friendIds);
+            const order = await createOrderService(user_id, orderDetail.menu_name, orderDetail.qty, orderDetail.price);
+            await createFriendsOrderService(user_id, order.menu_name, order.qty, order.price, orderDetail.friends_id);
             return order; 
         }));
         
@@ -89,7 +89,7 @@ const addBillService = async (userId: number, description: string, paymentMethod
         }
 
         // Create a new bill
-        const newBill = await createBill(userId, description, paymentMethodId, discount, tax, service, BigInt(totalPrice));
+        const newBill = await createBill(user_id, description, payment_method_id, discount, tax, service, BigInt(totalPrice));
 
         // add bill id to the orders
         const orderIds = newOrdersAndFriendsOrders.map(order => order.id);
@@ -106,13 +106,13 @@ const addBillService = async (userId: number, description: string, paymentMethod
     }
 };
 
-const updateBillStatusService = async (billId: number) => {
+const updateBillStatusService = async (bill_id: number) => {
     try {
-        const friendsOrders = await getFriendsOrdersByBillId(billId);
+        const friendsOrders = await getFriendsOrdersByBillId(bill_id);
         const allPaid = friendsOrders.every(order => order.is_paid === true);
 
         const newStatus = allPaid ? true : false;
-        await updateBillStatus(billId, newStatus);
+        await updateBillStatus(bill_id, newStatus);
 
         return { success: true, message: 'Bill status updated successfully.' };
     } catch (error: any) {

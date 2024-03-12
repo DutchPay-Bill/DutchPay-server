@@ -4,10 +4,10 @@ import { getBillIdByOrderId } from '../dao/billDao';
 import { createOrderService } from './orderService';
 import { updateBillStatusService } from './billService';
 
-const createFriendsOrderService = async (userId: number, menuName: string, qty: number, price: bigint, friendsIds: number[]) => {
+const createFriendsOrderService = async (user_id: number, menu_name: string, qty: number, price: bigint, friends_id: number[]) => {
     try {
-        const order = await createOrderService(userId, menuName, qty, price);
-        const orderId = order.id;
+        const order = await createOrderService(user_id, menu_name, qty, price);
+        const order_id = order.id;
 
         if (!order) {
             throw new ErrorHandler({
@@ -17,7 +17,7 @@ const createFriendsOrderService = async (userId: number, menuName: string, qty: 
             });
         }
 
-        if (friendsIds.length === 0) {
+        if (friends_id.length === 0) {
             throw new ErrorHandler({
                 success: false,
                 message: 'No friends provided',
@@ -25,7 +25,7 @@ const createFriendsOrderService = async (userId: number, menuName: string, qty: 
             });
         }
 
-        const newFriendOrders = await createFriendsOrder(orderId, friendsIds, price, qty);
+        const newFriendOrders = await createFriendsOrder(order_id, friends_id, price, qty);
         
         return newFriendOrders;
     } catch (error: any) {
@@ -38,22 +38,22 @@ const createFriendsOrderService = async (userId: number, menuName: string, qty: 
     }
 };
 
-const updateFriendOrderStatusService = async (friendId: number, is_paid: boolean) => {
+const updateFriendOrderStatusService = async (friend_id: number, is_paid: boolean) => {
     try {
-        const friendsOrders = await getFriendOrdersByFriendId(friendId);
+        const friendsOrders = await getFriendOrdersByFriendId(friend_id);
         if (!friendsOrders) {
             throw new ErrorHandler({
                 success: false,
-                message: `Friend with ID ${friendId} doesn't have any order..`,
+                message: `Friend with ID ${friend_id} doesn't have any order..`,
                 status: 404
             });
         }
         const updatedStatus = is_paid? true : false;
 
-        const updateFriendOrderStatus = await updateFriendsOrderStatus(friendId, updatedStatus)
-        const orderId = friendsOrders[0].orders_id as number; 
-        const billId = await getBillIdByOrderId(orderId) as number
-        await updateBillStatusService(billId);
+        const updateFriendOrderStatus = await updateFriendsOrderStatus(friend_id, updatedStatus)
+        const order_id = friendsOrders[0].orders_id as number; 
+        const bill_id = await getBillIdByOrderId(order_id) as number
+        await updateBillStatusService(bill_id);
         return updateFriendOrderStatus
     } catch (error: any) {
         console.error(error);
