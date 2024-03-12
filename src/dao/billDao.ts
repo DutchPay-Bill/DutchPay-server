@@ -35,7 +35,25 @@ const getAllBillByUserId = async (userId: number) => {
     }
 }
 
-const createBill = async (userId: number, description: string, paymentMethodId: number, discount: number | null, tax: number, service: number | null, totalPrice: number) => {
+const getBillIdByOrderId = async(orderId: number) => {
+    try {
+        const order = await prisma.orders.findUnique({where: {id: orderId}})
+        if (order) {
+            return order.bill_id;
+        }
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+const createBill = async (userId: number, description: string, paymentMethodId: number, discount: number | null, tax: number, service: number | null, totalPrice: bigint) => {
     try {
         const newBill = await prisma.bill.create({
             data: {
@@ -46,7 +64,8 @@ const createBill = async (userId: number, description: string, paymentMethodId: 
                 tax,
                 service,
                 total_price: totalPrice,
-                status: "ongoing"
+                is_completed: false,
+                date: new Date()
             }
         });
         return newBill;
@@ -62,4 +81,23 @@ const createBill = async (userId: number, description: string, paymentMethodId: 
     }
 }
 
-export { getBillById, getAllBillByUserId, createBill };
+const updateBillStatus = async (billId: number, is_completed: boolean) => {
+    try {
+        const updateBillStatus = await prisma.bill.update({
+            where: { id: billId },
+            data: { is_completed: is_completed }
+        });
+        return updateBillStatus
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { getBillById, getAllBillByUserId, getBillIdByOrderId, createBill, updateBillStatus };
