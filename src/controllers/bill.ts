@@ -36,8 +36,8 @@ const getBillList = async (req:Request, res: Response, next: NextFunction) => {
 const createNewBill = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id = (req.user as JwtPayload).id
-        const { description, payment_method_id, discount, tax, service, orderDetails } = req.body;
-        const newBill = await addBillService(user_id, description, payment_method_id, discount, tax, service, orderDetails);
+        const { description, payment_method_id, discount, tax, service, date, orderDetails } = req.body;
+        const newBill = await addBillService(user_id, description, payment_method_id, discount, tax, service, date, orderDetails);
         
         res.status(200).json({
             success: true,

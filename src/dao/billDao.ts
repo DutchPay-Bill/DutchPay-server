@@ -53,7 +53,7 @@ const getBillIdByOrderId = async(order_id: number) => {
     }
 }
 
-const createBill = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, totalPrice: bigint) => {
+const createBill = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, totalPrice: bigint, date: Date) => {
     try {
         const newBill = await prisma.bill.create({
             data: {
@@ -65,7 +65,7 @@ const createBill = async (user_id: number, description: string, payment_method_i
                 service,
                 total_price: totalPrice,
                 is_completed: false,
-                date: new Date()
+                date,
             }
         });
         return newBill;
