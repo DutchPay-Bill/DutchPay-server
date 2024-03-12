@@ -59,6 +59,7 @@ POST/Create New
     "discount": null,
     "tax": 10,
     "service": 5,
+    "date": "2024-03-10T15:00:00+00:00",
     "orderDetails": [
         {
             "menu_name": "Item 1",
