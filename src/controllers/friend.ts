@@ -4,9 +4,9 @@ import { JwtPayload } from 'jsonwebtoken';
 
 const addNewFriend = async (req:Request, res: Response, next: NextFunction) => {
     try {
-        const { name } = req.body
-        const userId = (req.user as JwtPayload).id
-        const newFriend = await addFriendService(userId, name)
+        const { friends_name } = req.body
+        const user_id = (req.user as JwtPayload).id
+        const newFriend = await addFriendService(user_id, friends_name)
         res.status(200).json({
             success: true,
             message: newFriend,

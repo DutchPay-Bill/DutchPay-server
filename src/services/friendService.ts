@@ -1,9 +1,10 @@
 import ErrorHandler from '../utils/errorHandler';
 import { getUserById } from '../dao/userDao';
-import { createFriend, getFriend } from '../dao/friendDao';
+import { createFriend, getFriendByName } from '../dao/friendDao';
 
 const addFriendService = async (userId: number, name: string) => {
     try {
+      console.log('user id ',userId )
         const user = await getUserById(userId)
         if (!user) {
             throw new ErrorHandler({
@@ -12,9 +13,9 @@ const addFriendService = async (userId: number, name: string) => {
                 status: 404
             })
         }
-        const checkFriendName = await getFriend(userId, name)
+        const checkFriendName = await getFriendByName(userId, name)
         if (!checkFriendName) {
-            const newFriend = await createFriend(name)
+            const newFriend = await createFriend(userId, name,)
             return newFriend
         } else {
             throw new ErrorHandler({
