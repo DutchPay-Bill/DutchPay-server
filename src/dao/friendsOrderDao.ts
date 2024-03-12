@@ -1,25 +1,22 @@
+import { Order_status_Enum } from "../../prisma/generated/client";
 import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
-import { getOrdersByBillId } from "./orderDao";
 
-const createFriendsOrder = async (order_id: number, friends_id: number[], price: bigint, qty: number) => {
+const createFriendsOrder = async (orderId: number, friendsId: number, price: number) => {
     try {
-        const dividedPrice = BigInt(price) * BigInt(qty) / BigInt(friends_id.length);
-        const newFriendOrders = [];
-        for (const friend_id of friends_id) {
-            const newFriendOrder = await prisma.friends_order.create({
-                data: {
-                    orders: { connect: { id: order_id } },
-                    friends: { connect: { id: friend_id } },
-                    friend_order_price: dividedPrice,
-                    is_paid: false,
-                    created_at: new Date()
-                }
-            });
-            newFriendOrders.push(newFriendOrder);
-        }
+        const friendsCount = await prisma.friends_order.count({ where: { friends_id: friendsId } });
 
-        return newFriendOrders;
+        const dividedPrice = price / friendsCount;
+        const newFriendsOrder = await prisma.friends_order.create({
+            data: {
+                orders: { connect: { id: orderId } },
+                friends: { connect: { id: friendsId } },
+                friend_order_price: dividedPrice,
+                status: "unpaid"
+            }
+        })
+
+        return newFriendsOrder
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -32,11 +29,11 @@ const createFriendsOrder = async (order_id: number, friends_id: number[], price:
     }
 }
 
-const updateFriendsOrderStatus = async (friends_id: number, is_paid: boolean) => {
+const updateFriendsOrderStatus = async (friendsId: number, status: Order_status_Enum) => {
     try {
         const updateStatus = await prisma.friends_order.updateMany({
-            where: { friends_id: friends_id },
-            data: { is_paid: is_paid }
+            where: { friends_id: friendsId },
+            data: { status: status }
         });
         return updateStatus
     } catch (error: any) {
@@ -51,10 +48,10 @@ const updateFriendsOrderStatus = async (friends_id: number, is_paid: boolean) =>
     }
 }
 
-const getFriendOrdersByFriendId = async (friends_id: number) => {
+const getFriendOrdersByFriendId = async (friendId: number) => {
     try {
         const getFriendOrders = await prisma.friends_order.findMany({
-            where: { friends_id: friends_id }
+            where: { friends_id: friendId }
         });
         return getFriendOrders
     } catch (error: any) {
@@ -69,28 +66,4 @@ const getFriendOrdersByFriendId = async (friends_id: number) => {
     }
 }
 
-const getFriendsOrdersByBillId = async (bill_id: number) => {
-    try {
-        const orders = await getOrdersByBillId(bill_id);
-        const orderIds = orders.map(order => order.id);
-
-        const friendsOrders = await prisma.friends_order.findMany({
-            where: {
-                orders_id: {
-                    in: orderIds,
-                },
-            },
-        });
-
-        return friendsOrders;
-    } catch (error: any) {
-        console.error(error);
-        throw new ErrorHandler({
-            success: false,
-            status: error.status,
-            message: error.message,
-        });
-    }
-};
-
-export { createFriendsOrder, updateFriendsOrderStatus, getFriendOrdersByFriendId, getFriendsOrdersByBillId }
+export { createFriendsOrder, updateFriendsOrderStatus, getFriendOrdersByFriendId }

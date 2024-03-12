@@ -1,33 +1,37 @@
 import ErrorHandler from '../utils/errorHandler';
+import { getFriendById } from '../dao/friendDao';
+import { getOrderById } from '../dao/orderDao';
 import { createFriendsOrder, getFriendOrdersByFriendId, updateFriendsOrderStatus } from '../dao/friendsOrderDao';
-import { getBillIdByOrderId } from '../dao/billDao';
-import { createOrderService } from './orderService';
-import { updateBillStatusService } from './billService';
+import { Order_status_Enum } from '../../prisma/generated/client';
 
-const createFriendsOrderService = async (user_id: number, menu_name: string, qty: number, price: bigint, friends_id: number[]) => {
+const createFriendsOrderService = async (userId: number, orderId: number, friendsIds: number[], price: number) => {
     try {
-        const order = await createOrderService(user_id, menu_name, qty, price);
-        const order_id = order.id;
+        const order = await getOrderById(orderId);
 
         if (!order) {
             throw new ErrorHandler({
                 success: false,
-                message: 'Order not found',
+                message: 'Order or friends not found',
                 status: 404
             });
         }
 
-        if (friends_id.length === 0) {
-            throw new ErrorHandler({
-                success: false,
-                message: 'No friends provided',
-                status: 400
-            });
+        const newFriendOrders: FriendOrderInput[] = [];
+        for (const friendId of friendsIds) {
+            const friend = await getFriendById(userId, friendId);
+            if (!friend) {
+                throw new ErrorHandler({
+                    success: false,
+                    message: `Friend with ID ${friendId} not found`,
+                    status: 404
+                });
+            }
+
+            const newFriendOrder = await createFriendsOrder(orderId, friendId, price);
+            newFriendOrders.push(newFriendOrder);
         }
 
-        const newFriendOrders = await createFriendsOrder(order_id, friends_id, price, qty);
-        
-        return { order, newFriendOrders };
+        return newFriendOrders;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -38,23 +42,26 @@ const createFriendsOrderService = async (user_id: number, menu_name: string, qty
     }
 };
 
-const updateFriendOrderStatusService = async (friend_id: number, is_paid: boolean) => {
+const updateFriendOrderStatusService = async (friendId: number, status: Order_status_Enum) => {
     try {
-        const friendsOrders = await getFriendOrdersByFriendId(friend_id);
+        const friendsOrders = await getFriendOrdersByFriendId(friendId);
         if (!friendsOrders) {
             throw new ErrorHandler({
                 success: false,
-                message: `Friend with ID ${friend_id} doesn't have any order..`,
+                message: `Friend with ID ${friendId} doesn't have any order..`,
                 status: 404
             });
         }
-        const updatedStatus = is_paid? true : false;
 
-        const updateFriendOrderStatus = await updateFriendsOrderStatus(friend_id, updatedStatus)
-        const order_id = friendsOrders[0].orders_id as number; 
-        const bill_id = await getBillIdByOrderId(order_id) as number
-        console.log(order_id, bill_id)
-        await updateBillStatusService(bill_id);
+        if (!(status in Order_status_Enum)) {
+            throw new ErrorHandler({
+                success: false,
+                message: "Invalid Status",
+                status: 404
+            });
+        }
+
+        const updateFriendOrderStatus = await updateFriendsOrderStatus(friendId, status)
         return updateFriendOrderStatus
     } catch (error: any) {
         console.error(error);
