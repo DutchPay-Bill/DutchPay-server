@@ -5,12 +5,13 @@ import { JwtPayload } from 'jsonwebtoken';
 const createFriendsOrder = async (req:Request, res: Response, next: NextFunction) => {
     try {
         const userId = (req.user as JwtPayload).id
-        const { orders_id, friends_id, price } = req.body
-        const newFriendsOrder = await createFriendsOrderService(userId, orders_id, friends_id, price)
+        const { menuName, qty, price, friendsIds } = req.body;
+        const newFriendsOrder = await createFriendsOrderService(userId, menuName, qty, price, friendsIds);
 
         res.status(200).json({
             success: true,
-            message: newFriendsOrder,
+            message: "Friends Order Created successfully",
+            data: newFriendsOrder,
         });
     } catch (error) {
         next(error);
@@ -19,8 +20,9 @@ const createFriendsOrder = async (req:Request, res: Response, next: NextFunction
 
 const updateFriendOrderStatus = async (req:Request, res: Response, next: NextFunction) => {
     try {
-        const { friend_id, status } = req.body
-        const newFriendsOrder = await updateFriendOrderStatusService(friend_id, status)
+        const friend_id = parseInt(req.params.friendId, 10)
+        const { is_paid } = req.body
+        const newFriendsOrder = await updateFriendOrderStatusService(friend_id, is_paid)
 
         res.status(200).json({
             success: true,
