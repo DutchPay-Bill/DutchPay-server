@@ -27,7 +27,7 @@ const createFriendsOrderService = async (user_id: number, menu_name: string, qty
 
         const newFriendOrders = await createFriendsOrder(order_id, friends_id, price, qty);
         
-        return newFriendOrders;
+        return { order, newFriendOrders };
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -53,6 +53,7 @@ const updateFriendOrderStatusService = async (friend_id: number, is_paid: boolea
         const updateFriendOrderStatus = await updateFriendsOrderStatus(friend_id, updatedStatus)
         const order_id = friendsOrders[0].orders_id as number; 
         const bill_id = await getBillIdByOrderId(order_id) as number
+        console.log(order_id, bill_id)
         await updateBillStatusService(bill_id);
         return updateFriendOrderStatus
     } catch (error: any) {

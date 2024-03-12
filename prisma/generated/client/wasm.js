@@ -135,7 +135,7 @@ exports.Prisma.Friends_orderScalarFieldEnum = {
   orders_id: 'orders_id',
   friends_id: 'friends_id',
   friend_order_price: 'friend_order_price',
-  status: 'status',
+  is_paid: 'is_paid',
   created_at: 'created_at',
   update_at: 'update_at'
 };
@@ -157,7 +157,7 @@ exports.Prisma.BillScalarFieldEnum = {
   service: 'service',
   total_price: 'total_price',
   date: 'date',
-  status: 'status'
+  is_completed: 'is_completed'
 };
 
 exports.Prisma.Payment_methodScalarFieldEnum = {
@@ -188,15 +188,7 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.Order_status_Enum = exports.$Enums.Order_status_Enum = {
-  paid: 'paid',
-  unpaid: 'unpaid'
-};
 
-exports.Bill_status_Enum = exports.$Enums.Bill_status_Enum = {
-  ongoing: 'ongoing',
-  completed: 'completed'
-};
 
 exports.Prisma.ModelName = {
   users: 'users',

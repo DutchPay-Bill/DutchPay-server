@@ -45,7 +45,7 @@ model friends_order {
   friends            friends?   @relation(fields: [friends_id], references: [id])
   friends_id         Int?
   friend_order_price BigInt
-  status             Order_status_Enum
+  is_paid            Boolean  @default(false)
   created_at         DateTime   @default(now())
   update_at          DateTime   @updatedAt
 }
@@ -71,7 +71,7 @@ model bill {
   service                 Float?
   total_price             BigInt
   date                    DateTime                  @default(now())
-  status                  Bill_status_Enum
+  is_completed            Boolean                   @default(false)
   orders                  orders[]
 }
 model payment_method {
