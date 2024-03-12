@@ -56,7 +56,7 @@ const getAllBillByUserService = async (userId: number) => {
 
 const addBillService = async (userId: number, description: string, paymentMethodId: number, discount: number | null, tax: number, service: number | null, orderDetails: { menuName: string; qty: number; price: bigint, friendIds: number[] }[], ) => {
     try {
-        if (!userId) {
+        if (!userId ) {
             throw new ErrorHandler({
                 success: false,
                 message: `User Not Found...`,
@@ -71,28 +71,27 @@ const addBillService = async (userId: number, description: string, paymentMethod
                 status: 404
             });
         }
-
         // Create friends orders
         const newOrdersAndFriendsOrders = await Promise.all(orderDetails.map(async orderDetail => {
             const order = await createOrderService(userId, orderDetail.menuName, orderDetail.qty, orderDetail.price);
             await createFriendsOrderService(userId, order.menu_name, order.qty, order.price, orderDetail.friendIds);
-            return order;
+            return order; 
         }));
-
-        // Calculate total_price
-        let totalPrice = newOrdersAndFriendsOrders.reduce((total, order) => total + order.price, BigInt(0));
-        if (discount !== null) {
-            totalPrice -= totalPrice * BigInt(discount) / BigInt(100);
-        }
+        
+        // calculate total_price
+        let totalPrice = newOrdersAndFriendsOrders.reduce((total, order) => total + (order.price * BigInt(order.qty)), BigInt(0));
         if (service !== null) {
             totalPrice += totalPrice * BigInt(service) / BigInt(100);
         }
         totalPrice += totalPrice * BigInt(tax) / BigInt(100);
+        if (discount !== null) {
+            totalPrice -= totalPrice * BigInt(discount) / BigInt(100);
+        }
 
         // Create a new bill
         const newBill = await createBill(userId, description, paymentMethodId, discount, tax, service, BigInt(totalPrice));
 
-        // Add bill ID to the orders
+        // add bill id to the orders
         const orderIds = newOrdersAndFriendsOrders.map(order => order.id);
         await addBillIdToOrders(newBill.id, orderIds);
 
