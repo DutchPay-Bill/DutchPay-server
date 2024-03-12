@@ -26,6 +26,7 @@ const corsOptions = {
 
 const corsMiddleware = (app: Application) => {
     app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions));
 };
 
 export default corsMiddleware;
