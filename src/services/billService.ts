@@ -54,7 +54,7 @@ const getAllBillByUserService = async (user_id: number) => {
     }
 };
 
-const addBillService = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, orderDetails: { menu_name: string; qty: number; price: bigint, friends_id: number[] }[], ) => {
+const addBillService = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, date: Date, orderDetails: { menu_name: string; qty: number; price: bigint; friends_id: number[] }[], ) => {
     try {
         if (!user_id ) {
             throw new ErrorHandler({
@@ -72,14 +72,13 @@ const addBillService = async (user_id: number, description: string, payment_meth
             });
         }
         // Create friends orders
-        const newOrdersAndFriendsOrders = await Promise.all(orderDetails.map(async orderDetail => {
-            const order = await createOrderService(user_id, orderDetail.menu_name, orderDetail.qty, orderDetail.price);
-            await createFriendsOrderService(user_id, order.menu_name, order.qty, order.price, orderDetail.friends_id);
-            return order; 
+        const newFriendsOrders = await Promise.all(orderDetails.map(async orderDetail => {
+            const { order, newFriendOrders } = await createFriendsOrderService(user_id, orderDetail.menu_name, orderDetail.qty, orderDetail.price, orderDetail.friends_id);
+            return { order, newFriendOrders };
         }));
         
-        // calculate total_price
-        let totalPrice = newOrdersAndFriendsOrders.reduce((total, order) => total + (order.price * BigInt(order.qty)), BigInt(0));
+        // Calculate total_price
+        let totalPrice = newFriendsOrders.reduce((total, { order }) => total + (order.price * BigInt(order.qty)), BigInt(0));
         if (service !== null) {
             totalPrice += totalPrice * BigInt(service) / BigInt(100);
         }
@@ -89,10 +88,10 @@ const addBillService = async (user_id: number, description: string, payment_meth
         }
 
         // Create a new bill
-        const newBill = await createBill(user_id, description, payment_method_id, discount, tax, service, BigInt(totalPrice));
+        const newBill = await createBill(user_id, description, payment_method_id, discount, tax, service, BigInt(totalPrice), date);
 
-        // add bill id to the orders
-        const orderIds = newOrdersAndFriendsOrders.map(order => order.id);
+        // Add bill id to the orders
+        const orderIds = newFriendsOrders.map(({ order }) => order.id);
         await addBillIdToOrders(newBill.id, orderIds);
 
         return newBill;
