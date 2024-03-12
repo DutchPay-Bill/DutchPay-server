@@ -2,7 +2,7 @@ import cors, { CorsOptions } from "cors";
 import { Application, Request } from "express";
 import { api_url } from "../utils/url";
 
-const client = [
+const origin = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://dutchpay-bill.web.app",
@@ -11,7 +11,7 @@ const client = [
 ];
 
 const corsOptions = (req: Request | any, callback: (err: Error | null, options?: CorsOptions) => void) => {
-    const clientOrigin = client.includes(req.header("Origin"));
+    const clientOrigin = origin.includes(req.header("Origin"));
     const isPostman = req.header("User-Agent")?.includes("Postman");
     if (clientOrigin) {
         callback(null, {

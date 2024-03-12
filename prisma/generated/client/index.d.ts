@@ -50,23 +50,6 @@ export type payment_method = $Result.DefaultSelection<Prisma.$payment_methodPayl
 export type payment_method_detail = $Result.DefaultSelection<Prisma.$payment_method_detailPayload>
 
 /**
- * Enums
- */
-export namespace $Enums {
-  export const Bill_status_Enum: {
-  ongoing: 'ongoing',
-  completed: 'completed'
-};
-
-export type Bill_status_Enum = (typeof Bill_status_Enum)[keyof typeof Bill_status_Enum]
-
-}
-
-export type Bill_status_Enum = $Enums.Bill_status_Enum
-
-export const Bill_status_Enum: typeof $Enums.Bill_status_Enum
-
-/**
  * ##  Prisma Client ʲˢ
  * 
  * Type-safe database client for TypeScript & Node.js
@@ -5825,7 +5808,7 @@ export namespace Prisma {
     service: number | null
     total_price: bigint | null
     date: Date | null
-    status: $Enums.Bill_status_Enum | null
+    is_completed: boolean | null
   }
 
   export type BillMaxAggregateOutputType = {
@@ -5838,7 +5821,7 @@ export namespace Prisma {
     service: number | null
     total_price: bigint | null
     date: Date | null
-    status: $Enums.Bill_status_Enum | null
+    is_completed: boolean | null
   }
 
   export type BillCountAggregateOutputType = {
@@ -5851,7 +5834,7 @@ export namespace Prisma {
     service: number
     total_price: number
     date: number
-    status: number
+    is_completed: number
     _all: number
   }
 
@@ -5886,7 +5869,7 @@ export namespace Prisma {
     service?: true
     total_price?: true
     date?: true
-    status?: true
+    is_completed?: true
   }
 
   export type BillMaxAggregateInputType = {
@@ -5899,7 +5882,7 @@ export namespace Prisma {
     service?: true
     total_price?: true
     date?: true
-    status?: true
+    is_completed?: true
   }
 
   export type BillCountAggregateInputType = {
@@ -5912,7 +5895,7 @@ export namespace Prisma {
     service?: true
     total_price?: true
     date?: true
-    status?: true
+    is_completed?: true
     _all?: true
   }
 
@@ -6012,7 +5995,7 @@ export namespace Prisma {
     service: number | null
     total_price: bigint
     date: Date
-    status: $Enums.Bill_status_Enum
+    is_completed: boolean
     _count: BillCountAggregateOutputType | null
     _avg: BillAvgAggregateOutputType | null
     _sum: BillSumAggregateOutputType | null
@@ -6044,7 +6027,7 @@ export namespace Prisma {
     service?: boolean
     total_price?: boolean
     date?: boolean
-    status?: boolean
+    is_completed?: boolean
     users?: boolean | bill$usersArgs<ExtArgs>
     payment_method_details?: boolean | bill$payment_method_detailsArgs<ExtArgs>
     orders?: boolean | bill$ordersArgs<ExtArgs>
@@ -6061,7 +6044,7 @@ export namespace Prisma {
     service?: boolean
     total_price?: boolean
     date?: boolean
-    status?: boolean
+    is_completed?: boolean
   }
 
   export type billInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6089,7 +6072,7 @@ export namespace Prisma {
       service: number | null
       total_price: bigint
       date: Date
-      status: $Enums.Bill_status_Enum
+      is_completed: boolean
     }, ExtArgs["result"]["bill"]>
     composites: {}
   }
@@ -6498,7 +6481,7 @@ export namespace Prisma {
     readonly service: FieldRef<"bill", 'Float'>
     readonly total_price: FieldRef<"bill", 'BigInt'>
     readonly date: FieldRef<"bill", 'DateTime'>
-    readonly status: FieldRef<"bill", 'Bill_status_Enum'>
+    readonly is_completed: FieldRef<"bill", 'Boolean'>
   }
     
 
@@ -8937,7 +8920,7 @@ export namespace Prisma {
     service: 'service',
     total_price: 'total_price',
     date: 'date',
-    status: 'status'
+    is_completed: 'is_completed'
   };
 
   export type BillScalarFieldEnum = (typeof BillScalarFieldEnum)[keyof typeof BillScalarFieldEnum]
@@ -9066,20 +9049,6 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Bill_status_Enum'
-   */
-  export type EnumBill_status_EnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bill_status_Enum'>
-    
-
-
-  /**
-   * Reference to a field of type 'Bill_status_Enum[]'
-   */
-  export type ListEnumBill_status_EnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bill_status_Enum[]'>
     
   /**
    * Deep Input Types
@@ -9388,7 +9357,7 @@ export namespace Prisma {
     service?: FloatNullableFilter<"bill"> | number | null
     total_price?: BigIntFilter<"bill"> | bigint | number
     date?: DateTimeFilter<"bill"> | Date | string
-    status?: EnumBill_status_EnumFilter<"bill"> | $Enums.Bill_status_Enum
+    is_completed?: BoolFilter<"bill"> | boolean
     users?: XOR<UsersNullableRelationFilter, usersWhereInput> | null
     payment_method_details?: XOR<Payment_method_detailNullableRelationFilter, payment_method_detailWhereInput> | null
     orders?: OrdersListRelationFilter
@@ -9404,7 +9373,7 @@ export namespace Prisma {
     service?: SortOrderInput | SortOrder
     total_price?: SortOrder
     date?: SortOrder
-    status?: SortOrder
+    is_completed?: SortOrder
     users?: usersOrderByWithRelationInput
     payment_method_details?: payment_method_detailOrderByWithRelationInput
     orders?: ordersOrderByRelationAggregateInput
@@ -9423,7 +9392,7 @@ export namespace Prisma {
     service?: FloatNullableFilter<"bill"> | number | null
     total_price?: BigIntFilter<"bill"> | bigint | number
     date?: DateTimeFilter<"bill"> | Date | string
-    status?: EnumBill_status_EnumFilter<"bill"> | $Enums.Bill_status_Enum
+    is_completed?: BoolFilter<"bill"> | boolean
     users?: XOR<UsersNullableRelationFilter, usersWhereInput> | null
     payment_method_details?: XOR<Payment_method_detailNullableRelationFilter, payment_method_detailWhereInput> | null
     orders?: OrdersListRelationFilter
@@ -9439,7 +9408,7 @@ export namespace Prisma {
     service?: SortOrderInput | SortOrder
     total_price?: SortOrder
     date?: SortOrder
-    status?: SortOrder
+    is_completed?: SortOrder
     _count?: billCountOrderByAggregateInput
     _avg?: billAvgOrderByAggregateInput
     _max?: billMaxOrderByAggregateInput
@@ -9460,7 +9429,7 @@ export namespace Prisma {
     service?: FloatNullableWithAggregatesFilter<"bill"> | number | null
     total_price?: BigIntWithAggregatesFilter<"bill"> | bigint | number
     date?: DateTimeWithAggregatesFilter<"bill"> | Date | string
-    status?: EnumBill_status_EnumWithAggregatesFilter<"bill"> | $Enums.Bill_status_Enum
+    is_completed?: BoolWithAggregatesFilter<"bill"> | boolean
   }
 
   export type payment_methodWhereInput = {
@@ -9867,7 +9836,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     users?: usersCreateNestedOneWithoutBillInput
     payment_method_details?: payment_method_detailCreateNestedOneWithoutBillInput
     orders?: ordersCreateNestedManyWithoutBillInput
@@ -9883,7 +9852,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     orders?: ordersUncheckedCreateNestedManyWithoutBillInput
   }
 
@@ -9894,7 +9863,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     users?: usersUpdateOneWithoutBillNestedInput
     payment_method_details?: payment_method_detailUpdateOneWithoutBillNestedInput
     orders?: ordersUpdateManyWithoutBillNestedInput
@@ -9910,7 +9879,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     orders?: ordersUncheckedUpdateManyWithoutBillNestedInput
   }
 
@@ -9924,7 +9893,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
   }
 
   export type billUpdateManyMutationInput = {
@@ -9934,7 +9903,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type billUncheckedUpdateManyInput = {
@@ -9947,7 +9916,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type payment_methodCreateInput = {
@@ -10512,13 +10481,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type EnumBill_status_EnumFilter<$PrismaModel = never> = {
-    equals?: $Enums.Bill_status_Enum | EnumBill_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumBill_status_EnumFilter<$PrismaModel> | $Enums.Bill_status_Enum
-  }
-
   export type Payment_method_detailNullableRelationFilter = {
     is?: payment_method_detailWhereInput | null
     isNot?: payment_method_detailWhereInput | null
@@ -10534,7 +10496,7 @@ export namespace Prisma {
     service?: SortOrder
     total_price?: SortOrder
     date?: SortOrder
-    status?: SortOrder
+    is_completed?: SortOrder
   }
 
   export type billAvgOrderByAggregateInput = {
@@ -10557,7 +10519,7 @@ export namespace Prisma {
     service?: SortOrder
     total_price?: SortOrder
     date?: SortOrder
-    status?: SortOrder
+    is_completed?: SortOrder
   }
 
   export type billMinOrderByAggregateInput = {
@@ -10570,7 +10532,7 @@ export namespace Prisma {
     service?: SortOrder
     total_price?: SortOrder
     date?: SortOrder
-    status?: SortOrder
+    is_completed?: SortOrder
   }
 
   export type billSumOrderByAggregateInput = {
@@ -10597,16 +10559,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type EnumBill_status_EnumWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Bill_status_Enum | EnumBill_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumBill_status_EnumWithAggregatesFilter<$PrismaModel> | $Enums.Bill_status_Enum
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumBill_status_EnumFilter<$PrismaModel>
-    _max?: NestedEnumBill_status_EnumFilter<$PrismaModel>
   }
 
   export type payment_methodCountOrderByAggregateInput = {
@@ -11088,10 +11040,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type EnumBill_status_EnumFieldUpdateOperationsInput = {
-    set?: $Enums.Bill_status_Enum
-  }
-
   export type usersUpdateOneWithoutBillNestedInput = {
     create?: XOR<usersCreateWithoutBillInput, usersUncheckedCreateWithoutBillInput>
     connectOrCreate?: usersCreateOrConnectWithoutBillInput
@@ -11484,13 +11432,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedEnumBill_status_EnumFilter<$PrismaModel = never> = {
-    equals?: $Enums.Bill_status_Enum | EnumBill_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumBill_status_EnumFilter<$PrismaModel> | $Enums.Bill_status_Enum
-  }
-
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -11505,16 +11446,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumBill_status_EnumWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Bill_status_Enum | EnumBill_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Bill_status_Enum[] | ListEnumBill_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumBill_status_EnumWithAggregatesFilter<$PrismaModel> | $Enums.Bill_status_Enum
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumBill_status_EnumFilter<$PrismaModel>
-    _max?: NestedEnumBill_status_EnumFilter<$PrismaModel>
   }
 
   export type friendsCreateWithoutUsersInput = {
@@ -11574,7 +11505,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     payment_method_details?: payment_method_detailCreateNestedOneWithoutBillInput
     orders?: ordersCreateNestedManyWithoutBillInput
   }
@@ -11588,7 +11519,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     orders?: ordersUncheckedCreateNestedManyWithoutBillInput
   }
 
@@ -11710,7 +11641,7 @@ export namespace Prisma {
     service?: FloatNullableFilter<"bill"> | number | null
     total_price?: BigIntFilter<"bill"> | bigint | number
     date?: DateTimeFilter<"bill"> | Date | string
-    status?: EnumBill_status_EnumFilter<"bill"> | $Enums.Bill_status_Enum
+    is_completed?: BoolFilter<"bill"> | boolean
   }
 
   export type payment_method_detailUpsertWithWhereUniqueWithoutUsersInput = {
@@ -11785,7 +11716,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     users?: usersCreateNestedOneWithoutBillInput
     payment_method_details?: payment_method_detailCreateNestedOneWithoutBillInput
   }
@@ -11800,7 +11731,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
   }
 
   export type billCreateOrConnectWithoutOrdersInput = {
@@ -11897,7 +11828,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     users?: usersUpdateOneWithoutBillNestedInput
     payment_method_details?: payment_method_detailUpdateOneWithoutBillNestedInput
   }
@@ -11912,7 +11843,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type friends_orderUpsertWithWhereUniqueWithoutOrdersInput = {
@@ -12434,7 +12365,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     users?: usersCreateNestedOneWithoutBillInput
     orders?: ordersCreateNestedManyWithoutBillInput
   }
@@ -12448,7 +12379,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
     orders?: ordersUncheckedCreateNestedManyWithoutBillInput
   }
 
@@ -12567,7 +12498,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
   }
 
   export type payment_method_detailCreateManyUsersInput = {
@@ -12628,7 +12559,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     payment_method_details?: payment_method_detailUpdateOneWithoutBillNestedInput
     orders?: ordersUpdateManyWithoutBillNestedInput
   }
@@ -12642,7 +12573,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     orders?: ordersUncheckedUpdateManyWithoutBillNestedInput
   }
 
@@ -12655,7 +12586,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type payment_method_detailUpdateWithoutUsersInput = {
@@ -12821,7 +12752,7 @@ export namespace Prisma {
     service?: number | null
     total_price: bigint | number
     date?: Date | string
-    status: $Enums.Bill_status_Enum
+    is_completed?: boolean
   }
 
   export type billUpdateWithoutPayment_method_detailsInput = {
@@ -12831,7 +12762,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     users?: usersUpdateOneWithoutBillNestedInput
     orders?: ordersUpdateManyWithoutBillNestedInput
   }
@@ -12845,7 +12776,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
     orders?: ordersUncheckedUpdateManyWithoutBillNestedInput
   }
 
@@ -12858,7 +12789,7 @@ export namespace Prisma {
     service?: NullableFloatFieldUpdateOperationsInput | number | null
     total_price?: BigIntFieldUpdateOperationsInput | bigint | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumBill_status_EnumFieldUpdateOperationsInput | $Enums.Bill_status_Enum
+    is_completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

@@ -157,7 +157,7 @@ exports.Prisma.BillScalarFieldEnum = {
   service: 'service',
   total_price: 'total_price',
   date: 'date',
-  status: 'status'
+  is_completed: 'is_completed'
 };
 
 exports.Prisma.Payment_methodScalarFieldEnum = {
@@ -188,10 +188,7 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.Bill_status_Enum = exports.$Enums.Bill_status_Enum = {
-  ongoing: 'ongoing',
-  completed: 'completed'
-};
+
 
 exports.Prisma.ModelName = {
   users: 'users',

@@ -71,7 +71,7 @@ model bill {
   service                 Float?
   total_price             BigInt
   date                    DateTime                  @default(now())
-  status                  Bill_status_Enum
+  is_completed            Boolean                   @default(false)
   orders                  orders[]
 }
 model payment_method {
