@@ -32,7 +32,6 @@ const corsOptions = (req: Request | any, callback: (err: Error | null, options?:
 
 const corsMiddleware = (app: Application) => {
     app.use(cors(corsOptions));
-    app.options('*', cors());
 };
 
 export default corsMiddleware;
