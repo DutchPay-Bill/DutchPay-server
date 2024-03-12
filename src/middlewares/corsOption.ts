@@ -12,11 +12,7 @@ const client = [
 
 const corsOptions = {
     origin: function (origin: any, callback: any) {
-        if (origin && client.includes("Origin")) {
-            callback(null, true);
-        } else if (origin && client.includes("postman")) {
-            callback(null, true);
-        } else if (origin && client.includes("localhost")) {
+        if (origin && client.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -26,6 +22,7 @@ const corsOptions = {
     credentials: true,
     allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
 };
+
 
 const corsMiddleware = (app: Application) => {
     app.use(cors(corsOptions));
