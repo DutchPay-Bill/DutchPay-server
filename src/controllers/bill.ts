@@ -4,13 +4,13 @@ import { JwtPayload } from 'jsonwebtoken';
 
 const getOneBill = async (req:Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req.user as JwtPayload).id
-        const billId = parseInt(req.params.billId, 10);
-        const oneBill = await getOneBillService(userId, billId)
+        const user_id = (req.user as JwtPayload).id
+        const bill_id = parseInt(req.params.bill_id, 10);
+        const oneBill = await getOneBillService(user_id, bill_id)
 
         res.status(200).json({
             success: true,
-            message: `Bill #${billId}:`,
+            message: `Bill #${bill_id}:`,
             data: oneBill
         });
     } catch (error) {
@@ -20,8 +20,8 @@ const getOneBill = async (req:Request, res: Response, next: NextFunction) => {
 
 const getBillList = async (req:Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req.user as JwtPayload).id
-        const billList = await getAllBillByUserService(userId)
+        const user_id = (req.user as JwtPayload).id
+        const billList = await getAllBillByUserService(user_id)
 
         res.status(200).json({
             success: true,
@@ -35,9 +35,9 @@ const getBillList = async (req:Request, res: Response, next: NextFunction) => {
 
 const createNewBill = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req.user as JwtPayload).id
-        const { description, paymentMethodId, discount, tax, service, orderDetails } = req.body;
-        const newBill = await addBillService(userId, description, paymentMethodId, discount, tax, service, orderDetails);
+        const user_id = (req.user as JwtPayload).id
+        const { description, payment_method_id, discount, tax, service, orderDetails } = req.body;
+        const newBill = await addBillService(user_id, description, payment_method_id, discount, tax, service, orderDetails);
         
         res.status(200).json({
             success: true,
