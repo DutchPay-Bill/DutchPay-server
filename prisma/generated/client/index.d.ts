@@ -53,15 +53,7 @@ export type payment_method_detail = $Result.DefaultSelection<Prisma.$payment_met
  * Enums
  */
 export namespace $Enums {
-  export const Order_status_Enum: {
-  paid: 'paid',
-  unpaid: 'unpaid'
-};
-
-export type Order_status_Enum = (typeof Order_status_Enum)[keyof typeof Order_status_Enum]
-
-
-export const Bill_status_Enum: {
+  export const Bill_status_Enum: {
   ongoing: 'ongoing',
   completed: 'completed'
 };
@@ -69,10 +61,6 @@ export const Bill_status_Enum: {
 export type Bill_status_Enum = (typeof Bill_status_Enum)[keyof typeof Bill_status_Enum]
 
 }
-
-export type Order_status_Enum = $Enums.Order_status_Enum
-
-export const Order_status_Enum: typeof $Enums.Order_status_Enum
 
 export type Bill_status_Enum = $Enums.Bill_status_Enum
 
@@ -3814,7 +3802,7 @@ export namespace Prisma {
     orders_id: number | null
     friends_id: number | null
     friend_order_price: bigint | null
-    status: $Enums.Order_status_Enum | null
+    is_paid: boolean | null
     created_at: Date | null
     update_at: Date | null
   }
@@ -3824,7 +3812,7 @@ export namespace Prisma {
     orders_id: number | null
     friends_id: number | null
     friend_order_price: bigint | null
-    status: $Enums.Order_status_Enum | null
+    is_paid: boolean | null
     created_at: Date | null
     update_at: Date | null
   }
@@ -3834,7 +3822,7 @@ export namespace Prisma {
     orders_id: number
     friends_id: number
     friend_order_price: number
-    status: number
+    is_paid: number
     created_at: number
     update_at: number
     _all: number
@@ -3860,7 +3848,7 @@ export namespace Prisma {
     orders_id?: true
     friends_id?: true
     friend_order_price?: true
-    status?: true
+    is_paid?: true
     created_at?: true
     update_at?: true
   }
@@ -3870,7 +3858,7 @@ export namespace Prisma {
     orders_id?: true
     friends_id?: true
     friend_order_price?: true
-    status?: true
+    is_paid?: true
     created_at?: true
     update_at?: true
   }
@@ -3880,7 +3868,7 @@ export namespace Prisma {
     orders_id?: true
     friends_id?: true
     friend_order_price?: true
-    status?: true
+    is_paid?: true
     created_at?: true
     update_at?: true
     _all?: true
@@ -3977,7 +3965,7 @@ export namespace Prisma {
     orders_id: number | null
     friends_id: number | null
     friend_order_price: bigint
-    status: $Enums.Order_status_Enum
+    is_paid: boolean
     created_at: Date
     update_at: Date
     _count: Friends_orderCountAggregateOutputType | null
@@ -4006,7 +3994,7 @@ export namespace Prisma {
     orders_id?: boolean
     friends_id?: boolean
     friend_order_price?: boolean
-    status?: boolean
+    is_paid?: boolean
     created_at?: boolean
     update_at?: boolean
     orders?: boolean | friends_order$ordersArgs<ExtArgs>
@@ -4018,7 +4006,7 @@ export namespace Prisma {
     orders_id?: boolean
     friends_id?: boolean
     friend_order_price?: boolean
-    status?: boolean
+    is_paid?: boolean
     created_at?: boolean
     update_at?: boolean
   }
@@ -4040,7 +4028,7 @@ export namespace Prisma {
       orders_id: number | null
       friends_id: number | null
       friend_order_price: bigint
-      status: $Enums.Order_status_Enum
+      is_paid: boolean
       created_at: Date
       update_at: Date
     }, ExtArgs["result"]["friends_order"]>
@@ -4444,7 +4432,7 @@ export namespace Prisma {
     readonly orders_id: FieldRef<"friends_order", 'Int'>
     readonly friends_id: FieldRef<"friends_order", 'Int'>
     readonly friend_order_price: FieldRef<"friends_order", 'BigInt'>
-    readonly status: FieldRef<"friends_order", 'Order_status_Enum'>
+    readonly is_paid: FieldRef<"friends_order", 'Boolean'>
     readonly created_at: FieldRef<"friends_order", 'DateTime'>
     readonly update_at: FieldRef<"friends_order", 'DateTime'>
   }
@@ -8921,7 +8909,7 @@ export namespace Prisma {
     orders_id: 'orders_id',
     friends_id: 'friends_id',
     friend_order_price: 'friend_order_price',
-    status: 'status',
+    is_paid: 'is_paid',
     created_at: 'created_at',
     update_at: 'update_at'
   };
@@ -9061,16 +9049,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Order_status_Enum'
+   * Reference to a field of type 'Boolean'
    */
-  export type EnumOrder_status_EnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Order_status_Enum'>
-    
-
-
-  /**
-   * Reference to a field of type 'Order_status_Enum[]'
-   */
-  export type ListEnumOrder_status_EnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Order_status_Enum[]'>
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -9277,7 +9258,7 @@ export namespace Prisma {
     orders_id?: IntNullableFilter<"friends_order"> | number | null
     friends_id?: IntNullableFilter<"friends_order"> | number | null
     friend_order_price?: BigIntFilter<"friends_order"> | bigint | number
-    status?: EnumOrder_status_EnumFilter<"friends_order"> | $Enums.Order_status_Enum
+    is_paid?: BoolFilter<"friends_order"> | boolean
     created_at?: DateTimeFilter<"friends_order"> | Date | string
     update_at?: DateTimeFilter<"friends_order"> | Date | string
     orders?: XOR<OrdersNullableRelationFilter, ordersWhereInput> | null
@@ -9289,7 +9270,7 @@ export namespace Prisma {
     orders_id?: SortOrderInput | SortOrder
     friends_id?: SortOrderInput | SortOrder
     friend_order_price?: SortOrder
-    status?: SortOrder
+    is_paid?: SortOrder
     created_at?: SortOrder
     update_at?: SortOrder
     orders?: ordersOrderByWithRelationInput
@@ -9304,7 +9285,7 @@ export namespace Prisma {
     orders_id?: IntNullableFilter<"friends_order"> | number | null
     friends_id?: IntNullableFilter<"friends_order"> | number | null
     friend_order_price?: BigIntFilter<"friends_order"> | bigint | number
-    status?: EnumOrder_status_EnumFilter<"friends_order"> | $Enums.Order_status_Enum
+    is_paid?: BoolFilter<"friends_order"> | boolean
     created_at?: DateTimeFilter<"friends_order"> | Date | string
     update_at?: DateTimeFilter<"friends_order"> | Date | string
     orders?: XOR<OrdersNullableRelationFilter, ordersWhereInput> | null
@@ -9316,7 +9297,7 @@ export namespace Prisma {
     orders_id?: SortOrderInput | SortOrder
     friends_id?: SortOrderInput | SortOrder
     friend_order_price?: SortOrder
-    status?: SortOrder
+    is_paid?: SortOrder
     created_at?: SortOrder
     update_at?: SortOrder
     _count?: friends_orderCountOrderByAggregateInput
@@ -9334,7 +9315,7 @@ export namespace Prisma {
     orders_id?: IntNullableWithAggregatesFilter<"friends_order"> | number | null
     friends_id?: IntNullableWithAggregatesFilter<"friends_order"> | number | null
     friend_order_price?: BigIntWithAggregatesFilter<"friends_order"> | bigint | number
-    status?: EnumOrder_status_EnumWithAggregatesFilter<"friends_order"> | $Enums.Order_status_Enum
+    is_paid?: BoolWithAggregatesFilter<"friends_order"> | boolean
     created_at?: DateTimeWithAggregatesFilter<"friends_order"> | Date | string
     update_at?: DateTimeWithAggregatesFilter<"friends_order"> | Date | string
   }
@@ -9767,7 +9748,7 @@ export namespace Prisma {
 
   export type friends_orderCreateInput = {
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
     orders?: ordersCreateNestedOneWithoutFriends_orderInput
@@ -9779,14 +9760,14 @@ export namespace Prisma {
     orders_id?: number | null
     friends_id?: number | null
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
   }
 
   export type friends_orderUpdateInput = {
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: ordersUpdateOneWithoutFriends_orderNestedInput
@@ -9798,7 +9779,7 @@ export namespace Prisma {
     orders_id?: NullableIntFieldUpdateOperationsInput | number | null
     friends_id?: NullableIntFieldUpdateOperationsInput | number | null
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9808,14 +9789,14 @@ export namespace Prisma {
     orders_id?: number | null
     friends_id?: number | null
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
   }
 
   export type friends_orderUpdateManyMutationInput = {
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9825,7 +9806,7 @@ export namespace Prisma {
     orders_id?: NullableIntFieldUpdateOperationsInput | number | null
     friends_id?: NullableIntFieldUpdateOperationsInput | number | null
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10422,11 +10403,9 @@ export namespace Prisma {
     _max?: NestedBigIntFilter<$PrismaModel>
   }
 
-  export type EnumOrder_status_EnumFilter<$PrismaModel = never> = {
-    equals?: $Enums.Order_status_Enum | EnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumOrder_status_EnumFilter<$PrismaModel> | $Enums.Order_status_Enum
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type OrdersNullableRelationFilter = {
@@ -10444,7 +10423,7 @@ export namespace Prisma {
     orders_id?: SortOrder
     friends_id?: SortOrder
     friend_order_price?: SortOrder
-    status?: SortOrder
+    is_paid?: SortOrder
     created_at?: SortOrder
     update_at?: SortOrder
   }
@@ -10461,7 +10440,7 @@ export namespace Prisma {
     orders_id?: SortOrder
     friends_id?: SortOrder
     friend_order_price?: SortOrder
-    status?: SortOrder
+    is_paid?: SortOrder
     created_at?: SortOrder
     update_at?: SortOrder
   }
@@ -10471,7 +10450,7 @@ export namespace Prisma {
     orders_id?: SortOrder
     friends_id?: SortOrder
     friend_order_price?: SortOrder
-    status?: SortOrder
+    is_paid?: SortOrder
     created_at?: SortOrder
     update_at?: SortOrder
   }
@@ -10483,14 +10462,12 @@ export namespace Prisma {
     friend_order_price?: SortOrder
   }
 
-  export type EnumOrder_status_EnumWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Order_status_Enum | EnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumOrder_status_EnumWithAggregatesFilter<$PrismaModel> | $Enums.Order_status_Enum
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumOrder_status_EnumFilter<$PrismaModel>
-    _max?: NestedEnumOrder_status_EnumFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type friendsCountOrderByAggregateInput = {
@@ -10995,8 +10972,8 @@ export namespace Prisma {
     connect?: friendsWhereUniqueInput
   }
 
-  export type EnumOrder_status_EnumFieldUpdateOperationsInput = {
-    set?: $Enums.Order_status_Enum
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type ordersUpdateOneWithoutFriends_orderNestedInput = {
@@ -11494,21 +11471,17 @@ export namespace Prisma {
     _max?: NestedBigIntFilter<$PrismaModel>
   }
 
-  export type NestedEnumOrder_status_EnumFilter<$PrismaModel = never> = {
-    equals?: $Enums.Order_status_Enum | EnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumOrder_status_EnumFilter<$PrismaModel> | $Enums.Order_status_Enum
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type NestedEnumOrder_status_EnumWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Order_status_Enum | EnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    in?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Order_status_Enum[] | ListEnumOrder_status_EnumFieldRefInput<$PrismaModel>
-    not?: NestedEnumOrder_status_EnumWithAggregatesFilter<$PrismaModel> | $Enums.Order_status_Enum
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumOrder_status_EnumFilter<$PrismaModel>
-    _max?: NestedEnumOrder_status_EnumFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumBill_status_EnumFilter<$PrismaModel = never> = {
@@ -11837,7 +11810,7 @@ export namespace Prisma {
 
   export type friends_orderCreateWithoutOrdersInput = {
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
     friends?: friendsCreateNestedOneWithoutFriends_orderInput
@@ -11847,7 +11820,7 @@ export namespace Prisma {
     id?: number
     friends_id?: number | null
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
   }
@@ -11966,7 +11939,7 @@ export namespace Prisma {
     orders_id?: IntNullableFilter<"friends_order"> | number | null
     friends_id?: IntNullableFilter<"friends_order"> | number | null
     friend_order_price?: BigIntFilter<"friends_order"> | bigint | number
-    status?: EnumOrder_status_EnumFilter<"friends_order"> | $Enums.Order_status_Enum
+    is_paid?: BoolFilter<"friends_order"> | boolean
     created_at?: DateTimeFilter<"friends_order"> | Date | string
     update_at?: DateTimeFilter<"friends_order"> | Date | string
   }
@@ -12103,7 +12076,7 @@ export namespace Prisma {
 
   export type friends_orderCreateWithoutFriendsInput = {
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
     orders?: ordersCreateNestedOneWithoutFriends_orderInput
@@ -12113,7 +12086,7 @@ export namespace Prisma {
     id?: number
     orders_id?: number | null
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
   }
@@ -12711,14 +12684,14 @@ export namespace Prisma {
     id?: number
     friends_id?: number | null
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
   }
 
   export type friends_orderUpdateWithoutOrdersInput = {
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
     friends?: friendsUpdateOneWithoutFriends_orderNestedInput
@@ -12728,7 +12701,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     friends_id?: NullableIntFieldUpdateOperationsInput | number | null
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12737,7 +12710,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     friends_id?: NullableIntFieldUpdateOperationsInput | number | null
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12746,14 +12719,14 @@ export namespace Prisma {
     id?: number
     orders_id?: number | null
     friend_order_price: bigint | number
-    status: $Enums.Order_status_Enum
+    is_paid?: boolean
     created_at?: Date | string
     update_at?: Date | string
   }
 
   export type friends_orderUpdateWithoutFriendsInput = {
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: ordersUpdateOneWithoutFriends_orderNestedInput
@@ -12763,7 +12736,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     orders_id?: NullableIntFieldUpdateOperationsInput | number | null
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12772,7 +12745,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     orders_id?: NullableIntFieldUpdateOperationsInput | number | null
     friend_order_price?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumOrder_status_EnumFieldUpdateOperationsInput | $Enums.Order_status_Enum
+    is_paid?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     update_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
