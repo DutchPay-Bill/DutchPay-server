@@ -7,6 +7,7 @@ import router from './routes';
 import rootRoute from './routes/root';
 import corsMiddleware from './middlewares/corsOption';
 import cors from 'cors';
+import corsOptions from './middlewares/corsOption';
 
 // integration with .env
 dotenv.config();
@@ -20,7 +21,7 @@ const server_port = process.env.SERVER_PORT || 3001;
 // API root route
 app.use(rootRoute)
 // set cors accept client access
-corsMiddleware(app)
+app.use(cors(corsOptions))
 // security middleware
 middleWares(app)
 // endpoint routes

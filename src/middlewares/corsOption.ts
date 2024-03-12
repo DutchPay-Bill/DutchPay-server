@@ -1,5 +1,5 @@
-import cors, { CorsOptions } from "cors";
-import { Application, Request } from "express";
+import { CorsOptions } from "cors";
+import { Request } from "express";
 import { api_url } from "../utils/url";
 
 const origin = [
@@ -30,8 +30,4 @@ const corsOptions = (req: Request | any, callback: (err: Error | null, options?:
     }
 };
 
-const corsMiddleware = (app: Application) => {
-    app.use(cors(corsOptions));
-};
-
-export default corsMiddleware;
+export default corsOptions;
