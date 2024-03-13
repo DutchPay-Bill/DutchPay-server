@@ -11,13 +11,7 @@ const client = [
 ];
 
 const corsOptions = {
-    origin: function (origin: any, callback: any) {
-        if (origin && client.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: client,
     methods: 'GET, POST, DELETE, PUT, PATCH, OPTIONS, HEAD',
     credentials: true,
     allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
