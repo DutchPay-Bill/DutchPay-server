@@ -16,7 +16,11 @@ const getProfileService = async (id: number) => {
                 status: 404
             });
         }
-        return userProfile;
+        return {
+            success: true,
+            message: "Successfully get user profile",
+            data: userProfile
+        }
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
