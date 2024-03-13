@@ -26,7 +26,7 @@ authRouter.get('/google/callback', cors({origin: "*"}), passport.authenticate('g
     const oneWeekInSeconds = 7 * 24 * 3600;
     res.cookie('access_token', token, {
         maxAge: oneWeekInSeconds * 1000,
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
         sameSite: 'strict',
         path: '/'

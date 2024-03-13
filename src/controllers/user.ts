@@ -5,10 +5,11 @@ import { JwtPayload } from 'jsonwebtoken';
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = (req.user as JwtPayload).id;
-    const userProfile = await getProfileService(userId);
+    const result = await getProfileService(userId);
     res.status(200).json({
       success: true,
-      message: userProfile,
+      message: result.message,
+      data: result.data
     })
 
   } catch (error) {
@@ -25,6 +26,7 @@ const checkPhoneAvailability = async (req: Request, res: Response, next: NextFun
       res.status(200).json({
         success: true,
         message: result.message,
+        data: result.data
       })
     }
   } catch (error) {
@@ -41,6 +43,7 @@ const userRegisterbyPhone = async (req: Request, res: Response, next: NextFuncti
       res.status(200).json({
         success: true,
         message: result.message,
+        data: result.data
       })
     }
   } catch (error) {
@@ -58,7 +61,7 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       const oneWeekInSeconds = 7 * 24 * 3600;
       res.cookie("access_token", result.data.accessToken, {
         maxAge: oneWeekInSeconds * 1000,
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
         sameSite: 'none',
         path: '/',
