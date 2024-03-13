@@ -2,24 +2,19 @@ import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
 import { getOrdersByBillId } from "./orderDao";
 
-const createFriendsOrder = async (order_id: number, friends_id: number[], price: bigint, qty: number) => {
+const createFriendsOrder = async (order_id: number, friends_id: number, dividedPrice: bigint) => {
     try {
-        const dividedPrice = BigInt(price) * BigInt(qty) / BigInt(friends_id.length);
-        const newFriendOrders = [];
-        for (const friend_id of friends_id) {
-            const newFriendOrder = await prisma.friends_order.create({
-                data: {
-                    orders: { connect: { id: order_id } },
-                    friends: { connect: { id: friend_id } },
-                    friend_order_price: dividedPrice,
-                    is_paid: false,
-                    created_at: new Date()
-                }
-            });
-            newFriendOrders.push(newFriendOrder);
-        }
-
-        return newFriendOrders;
+        const newFriendOrder = await prisma.friends_order.create({
+            data: {
+                orders: { connect: { id: order_id } },
+                friends: { connect: { id: friends_id } },
+                friend_order_price: dividedPrice,
+                is_paid: false,
+                created_at: new Date()
+            }
+        });
+        
+        return newFriendOrder;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
