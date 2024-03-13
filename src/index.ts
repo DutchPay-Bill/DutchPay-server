@@ -19,7 +19,7 @@ app.use(express.json());
 // server port
 const server_port = process.env.SERVER_PORT || 3001;
 //accept all cors for auth
-app.use(cors())
+// app.use(cors());
 // API root route
 app.use(rootRoute)
 // set cors accept client access
