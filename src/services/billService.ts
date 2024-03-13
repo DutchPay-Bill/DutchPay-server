@@ -2,7 +2,6 @@ import ErrorHandler from '../utils/errorHandler';
 import { createBill, getAllBillByUserId, getBillById, updateBillStatus } from '../dao/billDao';
 import { addBillIdToOrders } from '../dao/orderDao';
 import { createFriendsOrderService } from './friendOrderService';
-import { createOrderService } from './orderService';
 import { getFriendsOrdersByBillId } from '../dao/friendsOrderDao';
 
 const getOneBillService = async (user_id: number, bill_id: number) => {
@@ -15,7 +14,10 @@ const getOneBillService = async (user_id: number, bill_id: number) => {
                 status: 404
             });
         }
-        return checkBill;
+        return {
+            ...checkBill,
+            total_price: checkBill.total_price.toString(),
+        };
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -43,7 +45,10 @@ const getAllBillByUserService = async (user_id: number) => {
                 status: 404
             });
         }
-        return getListBill;
+        return getListBill.map(bill => ({
+            ...bill,
+            total_price: bill.total_price.toString(),
+        }));
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -94,7 +99,10 @@ const addBillService = async (user_id: number, description: string, payment_meth
         const orderIds = newFriendsOrders.map(({ order }) => order.id);
         await addBillIdToOrders(newBill.id, orderIds);
 
-        return newBill;
+        return {
+            ...newBill,
+            total_price: totalPrice.toString(),
+        };
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
