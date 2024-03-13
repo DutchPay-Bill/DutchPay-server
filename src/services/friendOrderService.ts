@@ -25,7 +25,13 @@ const createFriendsOrderService = async (user_id: number, menu_name: string, qty
             });
         }
 
-        const newFriendOrders = await createFriendsOrder(order_id, friends_id, price, qty);
+        const dividedPrice = BigInt(price) * BigInt(qty) / BigInt(friends_id.length);
+        const newFriendOrders = [];
+        
+        for (const friend_id of friends_id) {
+            const newFriendOrder = await createFriendsOrder(order_id, friend_id, dividedPrice); 
+            newFriendOrders.push(newFriendOrder);
+        }
         
         return { order, newFriendOrders };
     } catch (error: any) {
