@@ -15,7 +15,7 @@ authRouter.post('/register', userRegisterbyPhone)
 
 // google auth
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-authRouter.get('/google/callback', cors({origin: "*"}), passport.authenticate('google', { session: false }), (req, res) => {
+authRouter.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
     if (!req.user) {
         res.redirect(`${client_url}/google-auth/failed`)
     }
