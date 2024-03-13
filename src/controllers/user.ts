@@ -78,7 +78,8 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
 };
  
 const userLogout = async (req: Request, res: Response) => {
-  res.clearCookie('access_token');
+  // res.clearCookie('access_token');
+  res.cookie('access_token', '', { expires: new Date(0) });
   res.status(200).json({
     success: true,
     message: "See you next time..!",
