@@ -1,10 +1,10 @@
 import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
 
-const createFriend = async (userId: number, name : string, )=> {
+const createFriend = async (user_id: number, name : string, )=> {
     try {
         const newFriend = await prisma.friends.create({
-            data: {user_id: userId, friends_name: name }
+            data: {user_id: user_id, friends_name: name }
         })
 
         return newFriend
@@ -20,10 +20,10 @@ const createFriend = async (userId: number, name : string, )=> {
     }
 }
 
-const getFriendByName = async (userId: number, name : string)=> {
+const getFriendByName = async (user_id: number, name : string)=> {
     try {
         const searchFriend = await prisma.friends.findFirst({
-            where:{user_id: userId, friends_name: name} 
+            where:{user_id: user_id, friends_name: name} 
         })
 
         return searchFriend
@@ -39,10 +39,10 @@ const getFriendByName = async (userId: number, name : string)=> {
     }
 }
 
-const getFriendById = async (userId: number, friendId: number)=> {
+const getFriendById = async (user_id: number, friendId: number)=> {
     try {
         const searchFriendById = await prisma.friends.findFirst({
-            where:{user_id: userId, id: friendId} 
+            where:{user_id: user_id, id: friendId} 
         })
 
         return searchFriendById

@@ -107,4 +107,46 @@ const updateOrder = async (orderId: number, newMenuName: string, newQty: number,
     }
 };
 
-export { getOrderById, createOrder, deleteOrder, updateOrder, getAllOrders };
+const getOrdersByBillId = async (billId: number) => {
+    try {
+        const searchOrders = await prisma.orders.findMany({
+            where:{bill_id: billId} 
+        })
+
+        return searchOrders
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+const addBillIdToOrders = async (billId: number, orderIds: number[]) => {
+    try {
+        const updatedOrders = await Promise.all(orderIds.map(async (orderId) => {
+            const updatedOrder = await prisma.orders.update({
+                where: { id: orderId },
+                data: { bill: { connect: { id: billId } } }
+            });
+            return updatedOrder;
+        }));
+
+        return updatedOrders;
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { getOrderById, createOrder, deleteOrder, updateOrder, getAllOrders, getOrdersByBillId, addBillIdToOrders };
