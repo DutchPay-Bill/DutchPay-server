@@ -5,7 +5,7 @@ import friendsOrderRouter from './friendsOrder';
 import orderRouter from './order';
 import billRouter from './bill';
 import paymentRouter from './payment';
-import friendListRouter from './friendList';
+import friendListRouter from './friends';
 import authenticationMiddleware from '../../middlewares/authentication';
 import authRouter from './auth';
 

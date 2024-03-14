@@ -1,10 +1,10 @@
 import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
 
-const createFriend = async (user_id: number, name : string, )=> {
+const createFriend = async (user_id: number, name : string, friends_photo: string)=> {
     try {
         const newFriend = await prisma.friends.create({
-            data: {user_id: user_id, friends_name: name }
+            data: {user_id: user_id, friends_name: name, friends_photo: friends_photo }
         })
 
         return newFriend
