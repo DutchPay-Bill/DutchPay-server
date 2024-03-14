@@ -19,5 +19,24 @@ const postPayment = async (user_id: number, card_number: bigint, card_name: stri
         await disconnectDB();
     }
 }
+const getPaymentMethodDetail = async (user_id: number) => {
+    try {
+        const payments = await prisma.payment_method_detail.findMany({where: {user_id}})
+        const formattedPayments = payments.map(payment => ({
+            ...payment,
+            card_number: payment.card_number.toString(),
+        }));
+        return formattedPayments
+    } catch (error) {
+        const err = error as Error
+        throw new ErrorHandler({
+            success: false,
+            status: 500,
+            message: err.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
 
-export { postPayment }
+export { postPayment, getPaymentMethodDetail }
