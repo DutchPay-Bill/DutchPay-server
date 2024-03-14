@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { checkRegisteredPhoneService, getProfileService, loginUserService, registerUserbyPhoneService, updateUserProfileService } from '../services/userService';
+import { checkRegisteredPhoneService, getProfileService, loginUserService, registerUserbyPhoneService, updateUserProfileService, deleteUserByIdService } from '../services/userService';
 import { JwtPayload } from 'jsonwebtoken';
 
 const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
@@ -101,4 +101,17 @@ const updateUserProfile = async (req: Request, res: Response, next: NextFunction
   }
 }
 
-export { getUserProfile, userRegisterbyPhone, userLogin, userLogout, updateUserProfile, checkPhoneAvailability }
+const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+      const userId = (req.user as JwtPayload).id; // Assumes user's ID is encoded in the JWT
+      const result = await deleteUserByIdService(userId);
+      res.status(200).json({
+          success: true,
+          message: result.message,
+      });
+  } catch (error) {
+      next(error);
+  }
+};
+
+export { getUserProfile, userRegisterbyPhone, userLogin, userLogout, updateUserProfile, checkPhoneAvailability, deleteUser }
