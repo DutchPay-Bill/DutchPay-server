@@ -4,20 +4,16 @@ import ErrorHandler from '../utils/errorHandler';
 
 const createOrder = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { userId, menuName, qty, price, billId } = req.body;
-
-        // Convert userId, qty, and price to their appropriate types before passing them to the service
-        // Assuming billId is optional and can be undefined if not provided
-        const newOrder = await createOrderService(parseInt(userId), menuName, parseInt(qty), BigInt(price), billId ? parseInt(billId) : undefined);
+        const { user_id, menu_name, qty, price, bill_id } = req.body;
+        const newOrder = await createOrderService(parseInt(user_id), menu_name, parseInt(qty), BigInt(price), bill_id ? parseInt(bill_id) : undefined);
 
         const modifiedOrder = {
             ...newOrder,
-            price: newOrder.price.toString(), // Ensure price is returned as a string
+            price: newOrder.price.toString(), 
         };
         
-        res.status(201).json(modifiedOrder); // Return the new order if creation was successful
+        res.status(201).json(modifiedOrder); 
     } catch (error: any) {
-        // Check if the error is an instance of ErrorHandler to use the custom status, otherwise default to 500
         const status = (error instanceof ErrorHandler) ? error.status : 500;
         const message = (error instanceof ErrorHandler) ? error.message : 'An error occurred while creating the order.';
         res.status(status).json({ message });
