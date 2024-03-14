@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createPaymentService } from '../services/paymentService';
+import { createPaymentService, getPaymentMethodDetailService } from '../services/paymentService';
 import jwt from 'jsonwebtoken'
 import JWT_TOKEN from '../config/jwt/jwt';
 
@@ -34,4 +34,27 @@ async function addNewPayment(req: Request, res: Response) {
   }
 }
 
-export { addNewPayment }
+const getPaymentMethodDetail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tokenJWT = req.cookies.access_token;
+
+      if (!tokenJWT) {
+          res.status(401).json({ message: 'Unauthorized - Token not provided' });
+          return;
+      }
+      const decodedToken: jwt.JwtPayload = jwt.verify(tokenJWT, JWT_TOKEN!) as jwt.JwtPayload;
+      const user_id = decodedToken.id;
+
+      const result = await getPaymentMethodDetailService(user_id);
+      res.status(200).json({
+      success: true,
+      message: result.message,
+      data: result.data
+    })
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { addNewPayment, getPaymentMethodDetail }

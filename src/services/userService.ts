@@ -114,15 +114,15 @@ const loginUserService = async ({ phone_number, password }: LoginInput) => {
         if (!user) {
             throw new ErrorHandler({
                 success: false,
-                message: 'User not found',
-                status: 404,
+                message: 'Phone Number or Password invalid',
+                status: 401,
             });
         }
         const isPasswordValid = await bcryptjs.compare(password, user.password || '');
         if (!isPasswordValid) {
             throw new ErrorHandler({
                 success: false,
-                message: 'Incorrect password',
+                message: 'Phone Number or Password invalid',
                 status: 401,
             });
         }        
