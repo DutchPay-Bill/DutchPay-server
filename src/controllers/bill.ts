@@ -21,7 +21,9 @@ const getOneBill = async (req:Request, res: Response, next: NextFunction) => {
 const getBillList = async (req:Request, res: Response, next: NextFunction) => {
     try {
         const user_id = (req.user as JwtPayload).id
-        const billList = await getAllBillByUserService(user_id)
+        const pageSize = parseInt(req.query.pageSize as string) || 5; 
+        const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+        const billList = await getAllBillByUserService(user_id, pageSize, pageNumber)
 
         res.status(200).json({
             success: true,

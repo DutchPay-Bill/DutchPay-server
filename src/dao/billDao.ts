@@ -18,22 +18,27 @@ const getBillById = async (user_id: number, bill_id: number) => {
     }
 }
 
-const getAllBillByUserId = async (user_id: number) => {
+const getAllBillByUserId = async (user_id: number, limit: number, offset: number) => {
     try {
-        const getAllBill = await prisma.bill.findMany({where: {user_id: user_id}})
+        const getAllBill = await prisma.bill.findMany({
+            where: { user_id },
+            take: limit,
+            skip: offset
+        });
 
-        return getAllBill
+        return getAllBill;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
             success: false,
-            status: error.status,
-            message: error.message,
+            status: error.status || 500,
+            message: error.message || "Internal Server Error",
         });
     } finally {
         await disconnectDB();
     }
 }
+
 
 const getBillIdByOrderId = async(order_id: number) => {
     try {
