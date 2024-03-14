@@ -49,9 +49,9 @@ PUT/Update Status (true/false): /:friendsId
 ```
 <br>
 **Get Payment:**
-<br>
+
 ![Screenshot 2024-03-14 195157](https://github.com/DutchPay-Bill/DutchPay-server/assets/130155172/95657345-58a7-4b0e-827e-678486d4f179)
-<br>
+
 
 **Bill:**
 <br>
