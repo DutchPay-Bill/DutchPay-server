@@ -1,5 +1,5 @@
 import ErrorHandler from '../utils/errorHandler';
-import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone, updateUserProfile } from '../dao/userDao';
+import { getPhone, getUserById, postCreateUserGoogle, postCreateUserPhone, updateUserProfile, deleteUserById } from '../dao/userDao';
 import bcryptjs from "bcryptjs"
 import * as jwt from "jsonwebtoken"
 import { add } from "date-fns";
@@ -196,4 +196,22 @@ const updateUserProfileService = async (id: number, updateData: any) => {
     }
 }
 
-export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService, updateUserProfileService, checkRegisteredPhoneService }
+const deleteUserByIdService = async (id: number): Promise<any> => {
+    try {
+        const deletedUser = await deleteUserById(id);
+        return {
+            success: true,
+            message: "User deleted successfully",
+            data: deletedUser
+        }
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+};
+
+export {getProfileService,  registerUserbyPhoneService, loginUserService, registerUserbyGoogleService, updateUserProfileService, checkRegisteredPhoneService, deleteUserByIdService }
