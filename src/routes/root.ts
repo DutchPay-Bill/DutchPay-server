@@ -1,5 +1,5 @@
 import express from 'express';
-import authRouter from './v1/auth';
+import googleRouter from './v1/auth/google';
 
 const rootRoute = express.Router()
 
@@ -10,6 +10,6 @@ rootRoute.get('/', (req, res) => {
     })
 })
 
-// rootRoute.use('/v1/auth', authRouter)
+rootRoute.use('/', googleRouter)
 
 export default rootRoute
