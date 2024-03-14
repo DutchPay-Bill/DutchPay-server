@@ -39,15 +39,10 @@ PUT/Update Status (true/false): /:friendsId
 <br>
 
 **New Payment:**
-<br>
-```
-{
-    "card_number": 1233420123456743,
-    "card_name":"test1235678",
-    "payment_method_id": 1
-}
-```
-<br>
+
+![Screenshot 2024-03-14 200227](https://github.com/DutchPay-Bill/DutchPay-server/assets/130155172/3c70af03-7179-4721-9398-9e7c042e7916)
+
+
 **Get Payment:**
 
 ![Screenshot 2024-03-14 195157](https://github.com/DutchPay-Bill/DutchPay-server/assets/130155172/95657345-58a7-4b0e-827e-678486d4f179)
