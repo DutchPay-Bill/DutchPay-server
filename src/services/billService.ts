@@ -31,13 +31,7 @@ const getOneBillService = async (user_id: number, bill_id: number) => {
 const getAllBillByUserService = async (user_id: number) => {
     try {
         const getListBill = await getAllBillByUserId(user_id);
-        if (getListBill.length === 0) {
-            return {
-                success: true,
-                message: 'List of Bill..:',
-                data: [],
-            };
-        }
+
         if (!getListBill) {
             throw new ErrorHandler({
                 success: false,
