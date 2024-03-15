@@ -87,7 +87,7 @@ const userLogout = async (req: Request, res: Response, next: NextFunction) => {
       expires: expirationDate,
       path: '/',
     });
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "See you next time..!",
     });    
