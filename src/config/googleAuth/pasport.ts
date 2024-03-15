@@ -17,36 +17,35 @@ passport.use(
       callbackURL: `${api_url}/v1/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const user = await getEmail(profile.emails?.[0].value as string);;
-
+      console.log("Google Authentication Profile:", profile);
+      const user = await getEmail(profile.emails?.[0].value as string);
       try {
         if (!user) {
           const newUser = await registerUserbyGoogleService(profile.displayName, profile.emails?.[0].value as string);
-          if (newUser) {
-            done(null, newUser);
-            return {
-              success: true,
-              status: 200,
-              message: newUser.message,
-              data: newUser.data
-            }
+          if (newUser && newUser.data) {
+            done(null, newUser.data);
+          } else {
+            done(new Error("Failed to register user"));
           }
         } else {
           done(null, user);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
+        done(error);
       }
     }
   )
 );
 
 passport.serializeUser((user: any, done) => {
+  console.log("Serialize User:", user);
   done(null, { id: user.id, email: user.email });
 });
 
-passport.deserializeUser(async (email: string, done) => {
-  const user = await getEmail(email);
+passport.deserializeUser(async (serializedUser: { id: string, email: string }, done) => {
+  console.log("Deserialize User:", serializedUser);
+  const user = await getEmail(serializedUser.email);
   done(null, user);
 });
 

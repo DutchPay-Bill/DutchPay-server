@@ -150,11 +150,12 @@ const loginUserService = async ({ phone_number, password }: LoginInput) => {
 const registerUserbyGoogleService = async (fullname: string, email: string) => {
     try {
         const createUser = await postCreateUserGoogle(fullname, email)
-        return {
+        const newUser = {
             success: true,
             message: "User registered successfully",
             data: createUser
-        }
+        };
+        return newUser;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({

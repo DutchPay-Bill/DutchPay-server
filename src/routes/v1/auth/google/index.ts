@@ -14,7 +14,7 @@ googleRouter.get('/v1/auth/google/callback', passport.authenticate('google', { s
         res.redirect(`${client_url}/google-auth/failed`)
     }
     const payload = {
-        id: (req.user as any).id,
+        id: req.user,
     };
     console.log('userID',payload )
     const token = jwt.sign(payload, JWT_TOKEN!, { expiresIn: '7d' });
