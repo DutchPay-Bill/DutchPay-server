@@ -117,4 +117,27 @@ const updateUserProfile = async (id: number, data: any) => {
     }
 }
 
-export { getEmail, postCreateUserPhone, getPhone, getUserById, postCreateUserGoogle, updateUserProfile }
+const deleteUserById = async (id: number): Promise<any> => {
+    try {
+        await prisma.friends.deleteMany({
+            where: { user_id: id }
+        });
+
+        const deletedUser = await prisma.users.delete({
+            where: { id }
+        });
+        return deletedUser;
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status || 500,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+};
+
+
+export { getEmail, postCreateUserPhone, getPhone, getUserById, postCreateUserGoogle, updateUserProfile, deleteUserById }

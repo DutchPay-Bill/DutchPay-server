@@ -1,13 +1,13 @@
-import { disconnectDB, prisma } from "../config/db/dbConnection";
 import ErrorHandler from "../utils/errorHandler";
+import { disconnectDB, prisma } from "../config/db/dbConnection";
 
 const getOrderById = async (orderId: number) => {
     try {
         const searchOrder = await prisma.orders.findUnique({
-            where:{id: orderId} 
-        })
+            where: { id: orderId }
+        });
 
-        return searchOrder
+        return searchOrder;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -15,10 +15,8 @@ const getOrderById = async (orderId: number) => {
             status: error.status,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
-}
+};
 
 const getAllOrders = async () => {
     try {
@@ -28,60 +26,85 @@ const getAllOrders = async () => {
         console.error(error);
         throw new ErrorHandler({
             success: false,
-            status: error.status || 500,
+            status: error.status,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
-// Add Order
-const createOrder = async (userId: number, menuName: string, qty: number, price: bigint) => {
+
+const createOrder = async (userId: number, menuName: string, qty: number, price: bigint, billId?: number) => {
     try {
+        const existingOrder = await prisma.orders.findFirst({
+            where: {
+                user_id: userId,
+                menu_name: menuName,
+            },
+        });
+
+        if (existingOrder) {
+            throw new ErrorHandler({
+                success: false,
+                status: 400,
+                message: 'An order with this menu name already exists for this user.',
+            });
+        }
+
         const newOrder = await prisma.orders.create({
             data: {
                 user_id: userId,
                 menu_name: menuName,
                 qty: qty,
                 price: price,
+                bill_id: billId || null, // This ensures null is used if billId is undefined or falsey
             },
         });
+
         return newOrder;
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
             success: false,
             status: error.status || 500,
-            message: error.message,
+            message: error.message || 'Error creating order',
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
-// Delete Order
 const deleteOrder = async (orderId: number) => {
     try {
-        const deletedOrder = await prisma.orders.delete({
-            where: {
-                id: orderId,
-            },
+        const result = await prisma.$transaction(async (tx) => {
+            await tx.friends_order.deleteMany({
+                where: {
+                    orders_id: orderId,
+                },
+            });
+            const orderExists = await tx.orders.findUnique({
+                where: {
+                    id: orderId,
+                },
+            });
+
+            if (!orderExists) {
+                return null;
+            }
+            return await tx.orders.delete({
+                where: {
+                    id: orderId,
+                },
+            });
         });
-        return deletedOrder;
+        if (result === null) {
+            throw new Error('Order not found');
+        }
+        return result;
     } catch (error: any) {
         console.error(error);
-        throw new ErrorHandler({
-            success: false,
-            status: error.status || 500,
-            message: error.message,
-        });
-    } finally {
-        await disconnectDB();
+        throw error;
     }
 };
 
-// Edit Order
+
 const updateOrder = async (orderId: number, newMenuName: string, newQty: number, newPrice: bigint) => {
     try {
         const updatedOrder = await prisma.orders.update({
@@ -102,8 +125,6 @@ const updateOrder = async (orderId: number, newMenuName: string, newQty: number,
             status: error.status,
             message: error.message,
         });
-    } finally {
-        await disconnectDB();
     }
 };
 
