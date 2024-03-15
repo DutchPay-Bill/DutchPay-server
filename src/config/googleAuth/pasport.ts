@@ -28,6 +28,7 @@ passport.use(
               success: true,
               status: 200,
               message: newUser.message,
+              data: newUser.data
             }
           }
         } else {
@@ -41,7 +42,7 @@ passport.use(
 );
 
 passport.serializeUser((user: any, done) => {
-  done(null, user.email);
+  done(null, { id: user.id, email: user.email });
 });
 
 passport.deserializeUser(async (email: string, done) => {

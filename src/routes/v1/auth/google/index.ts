@@ -16,13 +16,14 @@ googleRouter.get('/v1/auth/google/callback', passport.authenticate('google', { s
     const payload = {
         id: (req.user as any).id,
     };
+    console.log('userID',payload )
     const token = jwt.sign(payload, JWT_TOKEN!, { expiresIn: '7d' });
     const oneWeekInSeconds = 7 * 24 * 3600;
     res.cookie('access_token', token, {
         maxAge: oneWeekInSeconds * 1000,
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'none',
         path: '/'
     });
     res.redirect(`${client_url}/google-auth/success`)
