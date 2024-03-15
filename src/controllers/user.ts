@@ -77,17 +77,23 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
  
-const userLogout = async (req: Request, res: Response) => {
-  res.clearCookie('access_token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
-  });
-  res.status(200).json({
-    success: true,
-    message: "See you next time..!",
-  });
+const userLogout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const expirationDate = new Date('January 1, 2000');
+    res.cookie('access_token', '', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      expires: expirationDate,
+      path: '/',
+    });
+    res.status(200).json({
+      success: true,
+      message: "See you next time..!",
+    });    
+  } catch (error) {
+    next(error)
+  }
 };
 
 const updateUserProfile = async (req: Request, res: Response, next: NextFunction) => {
