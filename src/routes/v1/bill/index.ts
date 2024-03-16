@@ -3,8 +3,8 @@ import { createNewBill, getBillList, getOneBill, getRecentBill, updateBillStatus
 
 const billRouter = express.Router()
 
-billRouter.get('/:bill_id', getOneBill)
 billRouter.get('/recent', getRecentBill)
+billRouter.get('/:bill_id', getOneBill)
 billRouter.get('/', getBillList)
 billRouter.post('/', createNewBill)
 billRouter.put('/:bill_id', updateBillStatus)
