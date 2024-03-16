@@ -7,6 +7,6 @@ billRouter.get('/:bill_id', getOneBill)
 billRouter.get('/recent', getRecentBill)
 billRouter.get('/', getBillList)
 billRouter.post('/', createNewBill)
-billRouter.put('/', updateBillStatus)
+billRouter.put('/:bill_id', updateBillStatus)
 
 export default billRouter;
