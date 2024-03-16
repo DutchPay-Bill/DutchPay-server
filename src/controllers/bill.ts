@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getOneBillService, getAllBillByUserService, addBillService } from "../services/billService";
+import { getOneBillService, getAllBillByUserService, addBillService, updateBillStatusService, updateBillTotalPriceService, getRecentBillService } from "../services/billService";
 import { JwtPayload } from 'jsonwebtoken';
 
 const getOneBill = async (req:Request, res: Response, next: NextFunction) => {
@@ -38,12 +38,12 @@ const getBillList = async (req:Request, res: Response, next: NextFunction) => {
 const createNewBill = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user_id = (req.user as JwtPayload).id
-        const { description, payment_method_id, discount, tax, service, date, orderDetails } = req.body;
-        const newBill = await addBillService(user_id, description, payment_method_id, discount, tax, service, date, orderDetails);
+        const { description, payment_method_id, discount, tax, service, date } = req.body;
+        const newBill = await addBillService(user_id, description, payment_method_id, discount, tax, service, date);
         
         res.status(200).json({
             success: true,
-            message: "List of Bill",
+            message: "NeW Bill:",
             data: newBill
         });
     } catch (error) {
@@ -51,4 +51,52 @@ const createNewBill = async (req: Request, res: Response, next: NextFunction) =>
     }
   };
 
-export { getOneBill, getBillList, createNewBill }
+  const updateBillStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user_id = (req.user as JwtPayload).id
+        const bill_id = parseInt(req.params.bill_id, 10);
+        const updateBill = await updateBillStatusService(user_id, bill_id);
+        
+        res.status(200).json({
+            success: true,
+            message: "NeW Bill:",
+            data: updateBill
+        });
+    } catch (error) {
+        next(error);
+    }
+  };
+
+  const updateBillTotalPrice = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user_id = (req.user as JwtPayload).id
+        const bill_id = parseInt(req.params.bill_id, 10);
+        const { total_price } = req.body
+        const updateBill = await updateBillTotalPriceService(user_id, bill_id, total_price);
+        
+        res.status(200).json({
+            success: true,
+            message: "NeW Bill:",
+            data: updateBill
+        });
+    } catch (error) {
+        next(error);
+    }
+  };
+
+  const getRecentBill = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user_id = (req.user as JwtPayload).id
+        const recentBill = await getRecentBillService(user_id);
+        
+        res.status(200).json({
+            success: true,
+            message: "Recent Bill:",
+            data: recentBill
+        });
+    } catch (error) {
+        next(error);
+    }
+  };
+
+export { getOneBill, getBillList, createNewBill, updateBillStatus, updateBillTotalPrice, getRecentBill }
