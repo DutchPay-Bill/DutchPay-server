@@ -4,9 +4,9 @@ import { JwtPayload } from 'jsonwebtoken';
 
 const getOneBill = async (req:Request, res: Response, next: NextFunction) => {
     try {
-        const user_id = (req.user as JwtPayload).id
         const bill_id = parseInt(req.params.bill_id, 10);
-        const oneBill = await getOneBillService(user_id, bill_id)
+        const user_id = (req.user as JwtPayload).id
+        const oneBill = await getOneBillService( bill_id, user_id )
 
         res.status(200).json({
             success: true,
@@ -21,7 +21,7 @@ const getOneBill = async (req:Request, res: Response, next: NextFunction) => {
 const getBillList = async (req:Request, res: Response, next: NextFunction) => {
     try {
         const user_id = (req.user as JwtPayload).id
-        const pageSize = parseInt(req.query.pageSize as string) || 5; 
+        const pageSize = parseInt(req.query.pageSize as string) || 10; 
         const pageNumber = parseInt(req.query.pageNumber as string) || 1;
         const billList = await getAllBillByUserService(user_id, pageSize, pageNumber)
 
