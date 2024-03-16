@@ -58,7 +58,7 @@ const getBillIdByOrderId = async(order_id: number) => {
     }
 }
 
-const createBill = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, totalPrice: bigint, date: Date) => {
+const createBill = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, date: Date) => {
     try {
         const newBill = await prisma.bill.create({
             data: {
@@ -68,7 +68,6 @@ const createBill = async (user_id: number, description: string, payment_method_i
                 discount,
                 tax,
                 service,
-                total_price: totalPrice,
                 is_completed: false,
                 date,
             }
@@ -86,6 +85,26 @@ const createBill = async (user_id: number, description: string, payment_method_i
     }
 }
 
+const updateBillTotalPrice = async (user_id: number, bill_id: number, total_Price: number) => {
+    try {
+        const updateBillStatus = await prisma.bill.update({
+            where: { id: bill_id, user_id: user_id },
+            data: { total_price: total_Price }
+        });
+        return updateBillStatus
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+// update bill total price
+// pisahin update status bill & status friends order
 const updateBillStatus = async (bill_id: number, is_completed: boolean) => {
     try {
         const updateBillStatus = await prisma.bill.update({
@@ -105,4 +124,23 @@ const updateBillStatus = async (bill_id: number, is_completed: boolean) => {
     }
 }
 
-export { getBillById, getAllBillByUserId, getBillIdByOrderId, createBill, updateBillStatus };
+const getRecentBill = async (user_id: number) => {
+    try {
+        const recentBill = await prisma.bill.findFirst({
+            where: { user_id: user_id },
+            orderBy: { date: 'desc' }
+        });
+        return recentBill
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    } finally {
+        await disconnectDB();
+    }
+}
+
+export { getBillById, getAllBillByUserId, getBillIdByOrderId, createBill, updateBillStatus, updateBillTotalPrice, getRecentBill };
