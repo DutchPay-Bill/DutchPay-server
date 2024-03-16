@@ -1,8 +1,6 @@
 import ErrorHandler from '../utils/errorHandler';
-import { createBill, getAllBillByUserId, getBillById, updateBillStatus } from '../dao/billDao';
-import { addBillIdToOrders } from '../dao/orderDao';
-import { createFriendsOrderService } from './friendOrderService';
-import { getFriendsOrdersByBillId } from '../dao/friendsOrderDao';
+import { createBill, getAllBillByUserId, getBillById, getRecentBill, updateBillStatus, updateBillTotalPrice } from '../dao/billDao';
+import { parseISO } from 'date-fns';
 
 const getOneBillService = async (user_id: number, bill_id: number) => {
     try {
@@ -16,7 +14,7 @@ const getOneBillService = async (user_id: number, bill_id: number) => {
         }
         return {
             ...checkBill,
-            total_price: checkBill.total_price.toString(),
+            total_price: checkBill.total_price?.toString(),
         };
     } catch (error: any) {
         console.error(error);
@@ -44,7 +42,7 @@ const getAllBillByUserService = async (user_id: number, pageSize: number, pageNu
         }
         return getListBill.map(bill => ({
             ...bill,
-            total_price: bill.total_price.toString(),
+            total_price: bill.total_price?.toString(),
         }));
     } catch (error: any) {
         console.error(error);
@@ -56,7 +54,7 @@ const getAllBillByUserService = async (user_id: number, pageSize: number, pageNu
     }
 };
 
-const addBillService = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, date: Date, orderDetails: { menu_name: string; qty: number; price: bigint; friends_id: number[] }[], ) => {
+const addBillService = async (user_id: number, description: string, payment_method_id: number, discount: number | null, tax: number, service: number | null, date: string ) => {
     try {
         if (!user_id ) {
             throw new ErrorHandler({
@@ -66,40 +64,18 @@ const addBillService = async (user_id: number, description: string, payment_meth
             });
         }
 
-        if (!description || !payment_method_id || !tax || !orderDetails) {
+        if (!description || !payment_method_id || !tax ) {
             throw new ErrorHandler({
                 success: false,
-                message: `Description/ Payment Method/ Order details / Friends / Tax Missing...`,
+                message: `Description/ Payment Method/ Tax Missing...`,
                 status: 404
             });
         }
-        // Create friends orders
-        const newFriendsOrders = await Promise.all(orderDetails.map(async orderDetail => {
-            const { order, newFriendOrders } = await createFriendsOrderService(user_id, orderDetail.menu_name, orderDetail.qty, orderDetail.price, orderDetail.friends_id);
-            return { order, newFriendOrders };
-        }));
-        
-        // Calculate total_price
-        let totalPrice = newFriendsOrders.reduce((total, { order }) => total + (order.price * BigInt(order.qty)), BigInt(0));
-        if (service !== null) {
-            totalPrice += totalPrice * BigInt(service) / BigInt(100);
-        }
-        totalPrice += totalPrice * BigInt(tax) / BigInt(100);
-        if (discount !== null) {
-            totalPrice -= totalPrice * BigInt(discount) / BigInt(100);
-        }
+        const parsedDate: Date = parseISO(date);
+        const newBill = await createBill(user_id, description, payment_method_id, discount, tax, service, parsedDate);
 
-        // Create a new bill
-        const newBill = await createBill(user_id, description, payment_method_id, discount, tax, service, BigInt(totalPrice), date);
+        return newBill
 
-        // Add bill id to the orders
-        const orderIds = newFriendsOrders.map(({ order }) => order.id);
-        await addBillIdToOrders(newBill.id, orderIds);
-
-        return {
-            ...newBill,
-            total_price: totalPrice.toString(),
-        };
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -110,15 +86,55 @@ const addBillService = async (user_id: number, description: string, payment_meth
     }
 };
 
-const updateBillStatusService = async (bill_id: number) => {
+const updateBillTotalPriceService = async (user_id: number, bill_id: number, total_price: number) => {
     try {
-        const friendsOrders = await getFriendsOrdersByBillId(bill_id);
-        const allPaid = friendsOrders.every(order => order.is_paid === true);
+        if (!bill_id) {
+            throw new ErrorHandler({
+                success: false,
+                message: `Bill Not Found...`,
+                status: 404
+            });
+        } else if (!total_price) {
+            throw new ErrorHandler({
+                success: false,
+                message: `Required data missing...`,
+                status: 404
+            });
+        }
+        const addTotalPrice = await updateBillTotalPrice(user_id, bill_id, total_price) 
+        return addTotalPrice
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+    // Calculate total_price
+            // let totalPrice = newFriendsOrders.reduce((total, { order }) => total + (order.price * BigInt(order.qty)), BigInt(0));
+            // if (service !== null) {
+            //     totalPrice += totalPrice * BigInt(service) / BigInt(100);
+            // }
+            // totalPrice += totalPrice * BigInt(tax) / BigInt(100);
+            // if (discount !== null) {
+            //     totalPrice -= totalPrice * BigInt(discount) / BigInt(100);
+            // }
+}
+const updateBillStatusService = async (user_id: number, bill_id: number) => {
+    try {
+        if (!bill_id) {
+            throw new ErrorHandler({
+                success: false,
+                message: `Bill Not Found...`,
+                status: 404
+            });
+        }
+        const bill = await getBillById(user_id, bill_id)
+        const newStatus = !bill?.is_completed
+        const updatedStatus =  await updateBillStatus(bill_id, newStatus);
 
-        const newStatus = allPaid ? true : false;
-        await updateBillStatus(bill_id, newStatus);
-
-        return { success: true, message: 'Bill status updated successfully.' };
+        return updatedStatus
     } catch (error: any) {
         console.error(error);
         throw new ErrorHandler({
@@ -129,4 +145,19 @@ const updateBillStatusService = async (bill_id: number) => {
     }
 };
 
-export { getOneBillService, getAllBillByUserService, addBillService, updateBillStatusService };
+const getRecentBillService = async (user_id: number) => {
+    try {
+        const recentBill =  await getRecentBill(user_id);
+
+        return recentBill
+    } catch (error: any) {
+        console.error(error);
+        throw new ErrorHandler({
+            success: false,
+            status: error.status,
+            message: error.message,
+        });
+    }
+};
+
+export { getOneBillService, getAllBillByUserService, addBillService, updateBillTotalPriceService, updateBillStatusService, getRecentBillService };
